@@ -1,0 +1,21 @@
+{
+  "name": "web_app_ll",
+  "version": "1.0.0",
+  "description": "web aplication",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon app.ts",
+    "start": "node app.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "nodemon": "^3.1.0",
+    "typescript": "^5.4.5"
+  }
+}

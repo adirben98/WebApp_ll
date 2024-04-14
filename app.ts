@@ -1,13 +1,16 @@
-console.log(1)
-console.log(1)
-console.log(1)
-console.log(1)
-console.log(25)
-console.log(445)
-console.log(26)
-console.log(11)
-console.log(1111111111)
+import express from 'express';
+import dotenv from 'dotenv';
 
+dotenv.config();
 
+const app=express();
+const port=process.env.PORT;
 
+app.listen(port, ()=>{
+    console.log('server started at http://localhost:${port}')
+});
+app.use('/user',userRouter)
 
+app.use('/book',bookRouter)
+
+app.use('/post',postRouter)
