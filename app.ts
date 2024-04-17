@@ -1,21 +1,28 @@
-import express from 'express';
+import express, {Express} from 'express';
+import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import bookRouter from './Routes/bookRouter';
 import userRouter from './Routes/userRouter';
 import postRouter from './Routes/postRouter';
-
-dotenv.config();
-
+import bodyParser from 'body-parser';
 const app=express();
-const port=process.env.PORT;
-
-
-app.use('/user',userRouter)
-
-app.use('/book',bookRouter)
-
-app.use('/post',postRouter)
-
-app.listen(port, ()=>{
-    console.log('server started at http://localhost:${port}')
-});
+dotenv.config();
+const init = () => {
+    const promise = new Promise<Express>((resolve) => {
+      const db = mongoose.connection;
+      db.on("error", (error) => console.error(error));
+      db.once("open", () => console.log("connected to database"));
+      mongoose.connect(process.env.DATABASE_URL).then(() => {
+        app.use(bodyParser.urlencoded({ extended: true }));
+        app.use(bodyParser.json());
+  
+        app.use("/book", bookRouter);
+        app.use("/post", postRouter);
+        app.use("/user", userRouter);
+        resolve(app);
+      });
+    });
+    return promise;
+  };
+  
+  export default init;
