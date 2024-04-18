@@ -3,7 +3,8 @@ import mongoose from "mongoose";
 export interface IPost {
   _id: string;
   title: string;
-  content: string;
+  message: string;
+  owner: string;
 }
 
 const PostSchema = new mongoose.Schema<IPost>({
@@ -11,7 +12,11 @@ const PostSchema = new mongoose.Schema<IPost>({
     type: String,
     required: true,
   },
-  content: {
+  message: {
+    type: String,
+    required: true,
+  },
+  owner: {
     type: String,
     required: true,
   },

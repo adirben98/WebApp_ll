@@ -7,19 +7,26 @@
     "dev": "nodemon app.ts",
     "start": "tsc && node dist/app.js",
     "lint": "eslint . --ext .ts",
-    "test": "tsc && jest detectOpenHandles --forceExit"
+    "test": "tsc && jest detectOpenHandles --forceExit",
+    "testAuth": "tsc && jest --detectOpenHandles --forceExit ./tests/auth.test.ts"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/supertest": "^6.0.2",
+    "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
-    "mongoose": "^8.3.1"
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.3.1",
+    "morgan": "^1.10.0"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/express": "^4.17.1",
     "@types/jest": "^29.5.12",
+    "@types/jsonwebtoken": "^9.0.6",
     "eslint": "^9.0.0",
     "jest": "^29.7.0",
     "nodemon": "^3.1.0",

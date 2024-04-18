@@ -4,14 +4,11 @@ export interface IBook {
   _id: number;
   name: string;
   genre: string;
-  PEGI: number;
+  author: string;
 }
 
 const BookSchema = new mongoose.Schema<IBook>({
-  _id: {
-    type: Number,
-    required: true,
-  },
+
   name: {
     type: String,
     required: true,
@@ -20,9 +17,9 @@ const BookSchema = new mongoose.Schema<IBook>({
     type: String,
     required: false,
   },
-  PEGI: {
-    type: Number,
-    required: false,
+  author: {
+    type: String,
+    required: true,
   }
 });
 

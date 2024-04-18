@@ -1,8 +1,8 @@
 import express, {Express} from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-import bookRouter from './Routes/bookRouter';
-import userRouter from './Routes/userRouter';
+// import bookRouter from './Routes/bookRouter';
+import authRouter from './Routes/authRouter';
 import postRouter from './Routes/postRouter';
 import bodyParser from 'body-parser';
 const app=express();
@@ -16,9 +16,10 @@ const init = () => {
         app.use(bodyParser.urlencoded({ extended: true }));
         app.use(bodyParser.json());
   
-        app.use("/book", bookRouter);
+        // app.use("/book", bookRouter);
         app.use("/post", postRouter);
-        app.use("/user", userRouter);
+        app.use("/auth", authRouter);
+
         resolve(app);
       });
     });
