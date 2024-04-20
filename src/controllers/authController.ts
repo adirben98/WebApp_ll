@@ -8,6 +8,7 @@ import { Document } from "mongoose";
 const register = async (req: Request, res: Response) => {
     const email = req.body.email;
     const password = req.body.password;
+    const full_name = req.body.full_name;
     if (email === undefined || password === undefined) {
         return res.status(400).send("Email and password are required");
     }
@@ -18,7 +19,7 @@ const register = async (req: Request, res: Response) => {
         }
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
-        const newUser = await User.create({ email: email, password: hashedPassword });
+        const newUser = await User.create({ email: email,full_name:full_name, password: hashedPassword });
         return res.send(newUser);
     } catch (err) {
         return res.status(400).send(err.message);
@@ -152,7 +153,7 @@ export const authMiddleware = async (req: AuthRequest, res: Response, next: Next
     }
     jwt.verify(token, process.env.TOKEN_SECRET, (err, data: jwt.JwtPayload) => {
         if (err) {
-            return res.sendStatus(401);
+            return res.sendStatus(402);
         }
         const id = data._id;
         req.user = { _id: id };

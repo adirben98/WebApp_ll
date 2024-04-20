@@ -1,7 +1,8 @@
 import express, { Express } from "express";
 const app = express();
-import postRoute from "./Routes/postRouter";
-import authRoute from "./Routes/authRouter";
+import recepieRouter from "./Routes/recepieRouter";
+import commentRouter from "./Routes/commentRouter";
+import authRouter from "./Routes/authRouter";
 import env from "dotenv"
 env.config();
 import mongoose from "mongoose";
@@ -14,12 +15,13 @@ const init = () => {
     db.once("open", () => console.log("connected to database"));
     mongoose.connect(process.env.DATABASE_URL).then(() => {
      
-    app.use(bodyParser.urlencoded({ extended: true }));
-    app.use(bodyParser.json());
+      app.use(bodyParser.urlencoded({ extended: true }));
+      app.use(bodyParser.json());
 
-    app.use("/auth", authRoute);
-    app.use("/post", postRoute);
-    resolve(app);
+      app.use("/auth", authRouter);
+      app.use("/recepie", recepieRouter);
+      app.use("/comment", commentRouter);
+      resolve(app);
     });
   });
   return promise;

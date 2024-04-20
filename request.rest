@@ -7,3 +7,14 @@ Content-Type: application/json
   "email": "shlomi@gmail.com",
   "password": "445566"
 }
+###
+POST http://localhost:3000/recepie 
+Content-Type: application/json
+
+{
+    "_id": "12345",
+    "name":"mac&cheese",
+    "category":"breakfast",
+    "ingredients":["cheese","salt","pasta","cream"],
+    "instructions":["cook pasta","cook cream with salt","add all with cheese"]
+}

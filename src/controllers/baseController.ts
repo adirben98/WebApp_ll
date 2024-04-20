@@ -1,66 +1,80 @@
-// import { Request,Response } from "express";
-// import mongoose from "mongoose";
+import { Request,Response } from "express";
+import mongoose from "mongoose";
 
 
-// class BaseController<ModelInterface>{
-//     model: mongoose.Model<ModelInterface>;
+class BaseController<ModelInterface>{
+    model: mongoose.Model<ModelInterface>;
 
-//     constructor(model) {
-//         this.model = model;
-//     }
+    constructor(model) {
+        this.model = model;
+    }
 
-//     async get(req: Request, res: Response) {
-//         try {
-//             if (req.params.username != null) {
-//                 const user = await this.model.findById(req.params.id);
-//                 return res.status(200).send(user);
-//             } else {
-//                 if (req.query.name != null) {
-//                     const students = await this.model.find({ name: req.query.name });
-//                     return res.status(200).send(students);
-//                 } else {
-//                     const students = await this.model.find();
-//                     return res.status(200).send(students);
-//                 }
-//             }
-//         } catch (err) {
-//             res.status(500).send(err.message);
-//         }
-//     }
+    async get(req: Request, res: Response) {
+        try {
+            if (req.params.id != null) {
+                const modelObject = await this.model.findById(req.params.id);
+                return res.status(200).send(modelObject);
+            } 
+            return res.status(404).send()
+        } catch (err) {
+            res.status(500).send(err.message);
+        }
+    }
 
-//     async post(req: Request, res: Response) {
-//         const student = req.body;
-//         try {
-//             const newStudent = await this.model.create(student);
-//             res.status(201).json(newStudent);
-//         } catch (err) {
-//             res.status(500).send(err.message);
-//         }
-//     }
+    async post(req: Request, res: Response) {
+       
+        try {
+            
+            const modelObject = req.body;
+            const newModelObject = await this.model.create(modelObject);
+            res.status(201).json(newModelObject);
+        
+        //res.status(500).send();
 
-//     async put(req: Request, res: Response) {
-//         const student = req.body;
-//         try {
-//             const updatedStudent = await this.model.findByIdAndUpdate(
-//                 student._id,
-//                 student,
-//                 { new: true }
-//             );
-//             res.status(200).json(updatedStudent);
-//         } catch (err) {
-//             res.status(500).send(err.message);
-//         }
-//     }
 
-//     delete(req: Request, res: Response) {
-//         //const student = req.body;
-//         try {
-//             //await this.model.findByIdAndDelete(student._id);
-//             res.status(200).send();
-//         } catch (err) {
-//             res.status(500).send(err.message);
-//         }
-//     }
-// }
+        } catch (err) {
+            res.status(500).send(err.message);
+        }
+    }
 
-// export default BaseController 
+    async edit(req: Request, res: Response) {
+        
+        try {
+            if (req.body){
+                const modelObject = req.body;
+                const updatedStudent = await this.model.findByIdAndUpdate(
+                    modelObject._id,
+                    modelObject,
+                    { new: true }
+                );
+            return res.status(200).json(updatedStudent);
+
+            }
+            return res.status(500).send();
+            
+            
+        } catch (err) {
+            res.status(500).send(err.message);
+        }
+    }
+
+    async delete(req: Request, res: Response) {
+        try {
+            if (req.body){
+                const modelObject = req.body;
+                const updatedStudent = await this.model.findByIdAndDelete(
+                    modelObject._id,
+                    modelObject,
+                );
+            return res.status(200).json(updatedStudent);
+
+            }
+            return res.status(500).send();
+
+        } catch (err) {
+            res.status(500).send(err.message);
+        }
+    }
+}
+
+export default BaseController 

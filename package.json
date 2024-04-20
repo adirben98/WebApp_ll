@@ -8,7 +8,9 @@
     "start": "tsc && node dist/src/server.js",
     "lint": "eslint . --ext .ts",
     "test": "tsc && jest detectOpenHandles --forceExit",
-    "testAuth": "tsc && jest --detectOpenHandles --forceExit ./src/tests/auth.test.ts"
+    "testAuth": "tsc && jest --detectOpenHandles --forceExit ./src/tests/auth.test.ts",
+    "testRecepie": "tsc && jest --detectOpenHandles --forceExit ./src/tests/recepie.test.ts"
+
   },
   "author": "",
   "license": "ISC",
