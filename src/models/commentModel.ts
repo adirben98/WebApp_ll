@@ -4,12 +4,15 @@ export interface IComment {
     _id: string;
     author: string;
     content: string;
-    post: string;
+    recepieId: string;
     createdAt: Date;
-    editAt?:Date
+    edited: boolean;
 }
 
 const commentSchema=new mongoose.Schema<IComment>({
+    _id: {
+        type: String,
+    },
     author:{
         type:String,
         required:true
@@ -18,17 +21,19 @@ const commentSchema=new mongoose.Schema<IComment>({
         type:String,
         required:true
     },
-    post:{
+    recepieId:{
         type:String,
         required:true
     },
     createdAt:{
         type:Date,
-        required:true
+        default:Date.now
     },
-    editAt:{
-        type:Date
+    edited:{
+        type:Boolean,
+        default:false
     }
+    
 })
 
 export default mongoose.model<IComment>("Comment",commentSchema);

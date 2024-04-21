@@ -1,5 +1,7 @@
 import { Request,Response } from "express";
 import mongoose from "mongoose";
+import { AuthRequest } from "./authController";
+import User from "../models/userModel";
 
 
 class BaseController<ModelInterface>{
@@ -11,25 +13,33 @@ class BaseController<ModelInterface>{
 
     async get(req: Request, res: Response) {
         try {
-            if (req.params.id != null) {
+            if (req.params.id != null || req.params.recepieId != null) {
+                if (req.params.id){
                 const modelObject = await this.model.findById(req.params.id);
                 return res.status(200).send(modelObject);
-            } 
+                }
+
+                else{
+                const modelObject = await this.model.find({"recepieId":req.params.recepieId});
+                return res.status(200).send(modelObject);
+                }
+            }
+             
             return res.status(404).send()
         } catch (err) {
             res.status(500).send(err.message);
         }
     }
 
-    async post(req: Request, res: Response) {
+    async post(req: AuthRequest, res: Response) {
        
         try {
-            
+            const _id = req.user._id;
+            const user= await User.findById({"_id":_id})
+            req.body.author = user.full_name
             const modelObject = req.body;
             const newModelObject = await this.model.create(modelObject);
             res.status(201).json(newModelObject);
-        
-        //res.status(500).send();
 
 
         } catch (err) {
@@ -42,12 +52,12 @@ class BaseController<ModelInterface>{
         try {
             if (req.body){
                 const modelObject = req.body;
-                const updatedStudent = await this.model.findByIdAndUpdate(
+                const updatedModel = await this.model.findByIdAndUpdate(
                     modelObject._id,
                     modelObject,
                     { new: true }
                 );
-            return res.status(200).json(updatedStudent);
+            return res.status(200).json(updatedModel);
 
             }
             return res.status(500).send();
@@ -62,11 +72,11 @@ class BaseController<ModelInterface>{
         try {
             if (req.body){
                 const modelObject = req.body;
-                const updatedStudent = await this.model.findByIdAndDelete(
+                const deletedModel = await this.model.findByIdAndDelete(
                     modelObject._id,
                     modelObject,
                 );
-            return res.status(200).json(updatedStudent);
+            return res.status(200).json(deletedModel);
 
             }
             return res.status(500).send();

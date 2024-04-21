@@ -7,9 +7,12 @@
     "dev": "nodemon ./src/server.ts",
     "start": "tsc && node dist/src/server.js",
     "lint": "eslint . --ext .ts",
-    "test": "tsc && jest detectOpenHandles --forceExit",
+    "test": "tsc && jest --forceExit", 
+    
     "testAuth": "tsc && jest --detectOpenHandles --forceExit ./src/tests/auth.test.ts",
-    "testRecepie": "tsc && jest --detectOpenHandles --forceExit ./src/tests/recepie.test.ts"
+    "testRecepie": "tsc && jest --detectOpenHandles --forceExit ./src/tests/recepie.test.ts",
+    "testComment": "tsc && jest --detectOpenHandles --forceExit ./src/tests/comment.test.ts"
+
 
   },
   "author": "",

@@ -8,6 +8,7 @@ export interface IRecepie {
     category: string;
     ingredients: string[];
     instructions: string[];
+    createdAt:Date
     image: string;
     likes: number;
 }
@@ -34,6 +35,10 @@ const RecepieSchema = new mongoose.Schema<IRecepie>({
     instructions: {
         type: [String],
         required: true,
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now,
     },
     image:{
         type: String,

@@ -29,7 +29,7 @@ beforeAll(async () => {
   app = await init();
   console.log("Before all");
   await User.deleteMany({ email: user.email });
-  await Recepie.deleteMany({ author:"Idan@gmail.com" });
+  await Recepie.deleteMany({ author:"Idan the chef" });
   await request(app).post("/auth/register").send(user);
   const res = await request(app).post("/auth/login").send(user);
   user.accessToken = res.body.accessToken;
@@ -40,7 +40,7 @@ afterAll(async () => {
   });
 
 describe("Recepie Tests", () => { 
-    test("post recepie",async ()=>{
+    test("Post Recepie",async ()=>{
         const res = await request(app).post("/recepie").set("Authorization", "Bearer " + user.accessToken).send(testRecepie);
         expect(res.statusCode).toEqual(201);
         expect(res.body.author).toEqual("Idan the chef")
@@ -55,7 +55,7 @@ describe("Recepie Tests", () => {
     }) 
 
 
-    test("get recepie by id", async () => {
+    test("Get Recepie By Id", async () => {
         const res = await request(app).get("/recepie/"+testRecepie._id).set("Authorization", "Bearer " + user.accessToken).send();
         expect(res.statusCode).toEqual(200);
         expect(res.body.name).toEqual("mac&cheese")
@@ -66,7 +66,7 @@ describe("Recepie Tests", () => {
 
     })
 
-    test("edit recepie",async () => {
+    test("Edit Recepie",async () => {
         testRecepie.category="dinner"
         const res = await request(app).put("/recepie/").set("Authorization", "Bearer " + user.accessToken).send(testRecepie);
         expect(res.statusCode).toEqual(200);
@@ -77,7 +77,7 @@ describe("Recepie Tests", () => {
 
 
     })
-    test("delete recepie",async () => {
+    test("Delete Recepie",async () => {
         const res = await request(app).delete("/recepie/").set("Authorization", "Bearer " + user.accessToken).send(testRecepie);
         expect(res.statusCode).toEqual(200);
         const recepie=await Recepie.find(testRecepie)
