@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import User, { IUser } from "../models/userModel";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-
+import { OAuth2Client } from "google-auth-library";
 import { Document } from "mongoose";
 
 const register = async (req: Request, res: Response) => {
@@ -75,6 +75,35 @@ const login = async (req: Request, res: Response) => {
     } catch (err) {
         return res.status(400).send(err.message);
     }
+
+}
+const client= new OAuth2Client();
+
+const googleLogin = async (req: Request, res: Response) => {
+
+    try {
+        const ticket = await client.verifyIdToken({
+            idToken: req.body.token,
+            audience: process.env.GOOGLE_CLIENT_ID
+        });
+        const payload = ticket.getPayload();
+        const email = payload.email;
+        let user = await User.findOne({"email": email});
+        if (user == null) {
+            user = await User.create({
+                email: email,
+                full_name: payload.name,
+                password: "google-login"
+
+             });
+        }
+        const tokens = await generateTokens(user);
+        res.status(200).send(tokens);
+
+    } catch (err) {
+        return res.status(400).send(err.message);
+    }
+
 }
 
 

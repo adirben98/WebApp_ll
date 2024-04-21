@@ -8,7 +8,7 @@ import User from "../models/userModel"
 
 
 const testRecepie={
-    _id: "12345",
+    _id: "123456",
     name:"mac&cheese",
     author:"IDAN",
     category:"breakfast",

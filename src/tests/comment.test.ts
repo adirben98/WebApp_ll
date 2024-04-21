@@ -21,7 +21,7 @@ const testComment2 = {
 }
 
 const testRecepie={
-    _id:"12345",
+    _id:"123457",
     name:"mac&cheese",
     author:"IDAN",
     category:"breakfast",
@@ -86,7 +86,7 @@ afterAll(async () => {
         expect(res.statusCode).toEqual(200);
         expect(res.body[0].author).toEqual("Idan the chef")
         expect(res.body[0].content).toEqual("that is a great recepie")
-        expect(res.body[0].recepieId).toEqual("12345")
+        expect(res.body[0].recepieId).toEqual(testRecepie._id)
         expect(res.body[1].author).toEqual("Eliav the chef")
         expect(res.body[1].content).toEqual("that is a bad recepie")
         expect(res.body[1].recepieId).toEqual(testRecepie._id)
