@@ -10,9 +10,7 @@ export interface IComment {
 }
 
 const commentSchema=new mongoose.Schema<IComment>({
-    _id: {
-        type: String,
-    },
+   
     author:{
         type:String,
         required:true

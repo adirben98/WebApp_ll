@@ -6,16 +6,29 @@ import Recepie from "../models/recepieModel"
 import {TestUser} from "./auth.test"
 import User from "../models/userModel"
 
+export interface IRecepie {
+    _id?: string;  
+    name: string;
+    author: string;
+    category: string;
+    ingredients: string[];
+    instructions: string[];
+    image: string;
+    likes?: number;
+    likedBy?: string[];  
+}
 
-const testRecepie={
-    _id: "123456",
+
+const testRecepie:IRecepie={
+    
     name:"mac&cheese",
     author:"IDAN",
     category:"breakfast",
     ingredients:["cheese","salt","pasta","cream"],
     instructions:["cook pasta","cook cream with salt","add all with cheese"],
     image:"https://www.google.com/search?q=mac+and+cheese&rlz=1C1GCEU_enIL832IL832&source=lnms&tbm=isch&sa=X&ved=0ahUKEwiJ9J6V9JLzAhXQzIUKHbJzDZQQ_AUIBygC&biw=1366&bih=657#imgrc=5",
-    likes:0
+    likes:0,
+    likedBy:[]
 }
 const user: TestUser = {
     
@@ -49,9 +62,10 @@ describe("Recepie Tests", () => {
         expect(res.body.ingredients).toEqual(["cheese","salt","pasta","cream"])
         expect(res.body.instructions).toEqual(["cook pasta","cook cream with salt","add all with cheese"])
         expect(res.body.image).toEqual("https://www.google.com/search?q=mac+and+cheese&rlz=1C1GCEU_enIL832IL832&source=lnms&tbm=isch&sa=X&ved=0ahUKEwiJ9J6V9JLzAhXQzIUKHbJzDZQQ_AUIBygC&biw=1366&bih=657#imgrc=5")
-
-
-
+        expect(res.body.likes).toEqual(0)
+        expect(res.body.likedBy).toEqual([])    
+        
+        testRecepie._id=res.body._id
     }) 
 
 
@@ -62,14 +76,39 @@ describe("Recepie Tests", () => {
         expect(res.body.category).toEqual("breakfast")
         expect(res.body.ingredients).toEqual(["cheese","salt","pasta","cream"])
         expect(res.body.instructions).toEqual(["cook pasta","cook cream with salt","add all with cheese"])
+        expect(res.body.image).toEqual("https://www.google.com/search?q=mac+and+cheese&rlz=1C1GCEU_enIL832IL832&source=lnms&tbm=isch&sa=X&ved=0ahUKEwiJ9J6V9JLzAhXQzIUKHbJzDZQQ_AUIBygC&biw=1366&bih=657#imgrc=5")
+        expect(res.body.likes).toEqual(0)
+        expect(res.body.likedBy).toEqual([])
+
+    })
+
+    test("Get Top Five Recepie", async () => {
+        const id=testRecepie._id
+        for (let i = 0; i < 10; i++) {
+            testRecepie._id = undefined;
+            
+            testRecepie.name = "recepie" + i;
+            testRecepie.likes = i;
+            await request(app).post("/recepie").set("Authorization", "Bearer " + user.accessToken).send(testRecepie);
+        }
+        const res = await request(app).get("/recepie/topFive").set("Authorization", "Bearer " + user.accessToken).send();
+        expect(res.statusCode).toEqual(200);
+        for (let i = 0; i < 5; i++) {
+            expect(res.body[i].name).toEqual("recepie" + (9 - i))
+            expect(res.body[i].likes).toEqual(9 - i)
+        }
+        testRecepie._id = id;
 
 
     })
 
     test("Edit Recepie",async () => {
         testRecepie.category="dinner"
+        testRecepie.name="mac&cheese"
+
         const res = await request(app).put("/recepie/").set("Authorization", "Bearer " + user.accessToken).send(testRecepie);
         expect(res.statusCode).toEqual(200);
+        expect(res.body._id).toEqual(testRecepie._id )
         expect(res.body.name).toEqual("mac&cheese")
         expect(res.body.category).toEqual("dinner")
         expect(res.body.ingredients).toEqual(["cheese","salt","pasta","cream"])
@@ -77,8 +116,31 @@ describe("Recepie Tests", () => {
 
 
     })
+
+
+
+    test("Like Recepie",async () => {
+        const res = await request(app).get("/recepie/"+testRecepie._id).set("Authorization", "Bearer " + user.accessToken).send()
+        const likes=res.body.likes
+    
+        const res2=await request(app).post("/recepie/"+testRecepie._id+"/like").set("Authorization", "Bearer " + user.accessToken).send()
+        expect(res2.statusCode).toEqual(200);
+        expect(res2.body.name).toEqual("mac&cheese")
+        expect(res2.body.category).toEqual("dinner")
+        expect(res2.body.ingredients).toEqual(["cheese","salt","pasta","cream"])
+        expect(res2.body.instructions).toEqual(["cook pasta","cook cream with salt","add all with cheese"])
+        expect(res2.body.likes).toEqual(likes+1)
+
+        const res3 = await request(app).get("/recepie/"+testRecepie._id+"/like").set("Authorization", "Bearer " + user.accessToken).send()
+        expect(res3.statusCode).not.toEqual(200);
+
+    
+    
+    })
+
+
     test("Delete Recepie",async () => {
-        const res = await request(app).delete("/recepie/").set("Authorization", "Bearer " + user.accessToken).send(testRecepie);
+        const res = await request(app).delete("/recepie").set("Authorization", "Bearer " + user.accessToken).send(testRecepie);
         expect(res.statusCode).toEqual(200);
         const recepie=await Recepie.find(testRecepie)
         expect(recepie).toEqual([])

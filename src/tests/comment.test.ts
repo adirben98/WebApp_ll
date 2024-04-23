@@ -6,29 +6,33 @@ import Comment from "../models/commentModel";
 import {TestUser} from "./auth.test"
 import User from "../models/userModel"
 import Recepie from "../models/recepieModel"
+import {IRecepie} from "./recepie.test"
 
-    
-const testComment1 = {
-    _id:"11111",
+interface TestComment {
+    _id?: string;
+    content:string
+    recepieId?:string
+    author?:string
+}
+
+
+const testComment1:TestComment = {
     content:"that is a great recepie",
-    recepieId:""
 
 }
-const testComment2 = {
-    _id:"22222",
+const testComment2:TestComment = {
     content:"that is a bad recepie",
-    recepieId:""
 }
 
-const testRecepie={
-    _id:"123457",
+const testRecepie:IRecepie={
+    
     name:"mac&cheese",
     author:"IDAN",
     category:"breakfast",
     ingredients:["cheese","salt","pasta","cream"],
     instructions:["cook pasta","cook cream with salt","add all with cheese"],
     image:"https://www.google.com/search?q=mac+and+cheese&rlz=1C1GCEU_enIL832IL832&source=lnms&tbm=isch&sa=X&ved=0ahUKEwiJ9J6V9JLzAhXQzIUKHbJzDZQQ_AUIBygC&biw=1366&bih=657#imgrc=5",
-    likes:0
+    
 }
 const user1: TestUser = {
     
@@ -73,15 +77,20 @@ afterAll(async () => {
         expect(res.body.content).toEqual("that is a great recepie")
         expect(res.body.author).toEqual("Idan the chef")
         expect(res.body.recepieId).toEqual(testRecepie._id)
+        testComment1._id=res.body._id
+        testComment1.author=res.body.author
+
         const res2 = await request(app).post("/comment").set("Authorization", "Bearer " + user2.accessToken).send(testComment2);
         expect(res2.statusCode).toEqual(201);
         expect(res2.body.content).toEqual("that is a bad recepie")
         expect(res2.body.author).toEqual("Eliav the chef")
         expect(res2.body.recepieId).toEqual(testRecepie._id)
+        testComment2._id=res2.body._id
+        testComment2.author=res2.body.author
     })
   
     
-    test("get comments by recepie id", async () => {
+    test("Get Comments By Recepie Id", async () => {
         const res = await request(app).get("/comment/"+testRecepie._id).set("Authorization", "Bearer " + user1.accessToken).send();
         expect(res.statusCode).toEqual(200);
         expect(res.body[0].author).toEqual("Idan the chef")
@@ -92,13 +101,14 @@ afterAll(async () => {
         expect(res.body[1].recepieId).toEqual(testRecepie._id)
     })
 
-    test("edit comment",async () => {
+    test("Edit Comment",async () => {
         testComment2.content="changed my mind, it is a great recepie"
         const res=await request(app).put("/comment").set("Authorization","Bearer "+user2.accessToken).send(testComment2)
         expect(res.statusCode).toEqual(200)
         expect(res.body.content).toEqual("changed my mind, it is a great recepie")
         expect(res.body.author).toEqual("Eliav the chef")
         expect(res.body.recepieId).toEqual(testRecepie._id)
+        expect(res.body.edited).toEqual(true)
     })
 
     test("Delete Comment",async () => {

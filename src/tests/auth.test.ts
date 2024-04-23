@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import { App } from "supertest/types";
 import User from "../models/userModel";
 import Recepie from "../models/recepieModel";
+import { IRecepie } from "./recepie.test";
 
 export type TestUser = {
   email: string,
@@ -18,15 +19,14 @@ const user: TestUser = {
   "full_name":"Idan",
   "password": "445566"
 }
-const testRecepie={
-  _id: "12345",
+const testRecepie:IRecepie={
   name:"mac&cheese",
   author:"Eliav",
   category:"breakfast",
   ingredients:["cheese","salt","pasta","cream"],
   instructions:["cook pasta","cook cream with salt","add all with cheese"],
   image:"https://www.google.com/search?q=mac+and+cheese&rlz=1C1GCEU_enIL832IL832&source=lnms&tbm=isch&sa=X&ved=0ahUKEwiJ9J6V9JLzAhXQzIUKHbJzDZQQ_AUIBygC&biw=1366&bih=657#imgrc=5",
-  likes:0
+  
 }
 
 let app: App;
@@ -64,6 +64,7 @@ describe("Register Tests", () => {
 
     const res2 = await request(app).post("/recepie").set("Authorization", "Bearer " + user.accessToken).send(testRecepie);
     expect(res2.statusCode).toEqual(201);
+    testRecepie._id = res2.body._id;
 
    
   });
@@ -72,7 +73,7 @@ describe("Register Tests", () => {
 
   test("Refresh Token", async () => {
     await new Promise(r => setTimeout(r, 6000));
-    const res = await request(app).get("/recepie/12345").set("Authorization", "Bearer " + user.accessToken).send();
+    const res = await request(app).get("/recepie/"+testRecepie._id).set("Authorization", "Bearer " + user.accessToken).send();
     expect(res.statusCode).not.toEqual(200);
 
     const res2 = await request(app).get("/auth/refresh")
@@ -84,7 +85,7 @@ describe("Register Tests", () => {
     user.accessToken = res2.body.accessToken; 
     user.refreshToken = res2.body.refreshToken;
 
-    const res3 = await request(app).get("/recepie/12345").set("Authorization", "Bearer " + user.accessToken).send();
+    const res3 = await request(app).get("/recepie/"+testRecepie._id).set("Authorization", "Bearer " + user.accessToken).send();
     expect(res3.statusCode).toEqual(200);
   });
 

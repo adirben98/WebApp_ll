@@ -57,10 +57,10 @@ class BaseController<ModelInterface>{
                     modelObject,
                     { new: true }
                 );
-            return res.status(200).json(updatedModel);
+            res.status(200).json(updatedModel);
 
             }
-            return res.status(500).send();
+            res.status(500).send();
             
             
         } catch (err) {

@@ -1,23 +1,40 @@
 import BaseController from "./baseController";
-import Recpie,{IRecepie} from "../models/recepieModel"
+import Recepie,{IRecepie} from "../models/recepieModel"
 import { Response } from "express";
 import { AuthRequest } from "./authController";
-import User from "../models/userModel";
 
 class recepieController extends BaseController<IRecepie>{
     constructor(){
-        super(Recpie)
+        super(Recepie)
+    }
+    async getTopFive(req: AuthRequest, res: Response){
+        try {
+            const recepies = await Recepie.find().sort({likes:-1}).limit(5)
+            res.status(200).send(recepies)
+        } catch (error) {
+            res.status(400).send(error.message)
+        }
+    }
+    async likeIncrement(req: AuthRequest, res: Response){
+        try {
+            const recipeId = req.params.id;
+            const userId = req.user._id;
+
+            const recepie = await Recepie.findById(recipeId)
+            if (recepie.likedBy.includes(userId)){
+                res.status(400).send("You have already liked this recepie")
+            }
+            else{
+                recepie.likes+=1
+                recepie.likedBy.push(userId)
+                await recepie.save()
+                res.status(200).send(recepie)
+            }
+        } catch (error) {
+            res.status(400).send(error.message)
+        }
     }
 
-    // async post(req:AuthRequest, res:Response) {
-    //     try {
-
-    //     super.post(req,res)
-    //     }catch (err) {
-    //         res.status(501).send(err.message);
-    //     }
-        
-    // }
 }
 
 export default new recepieController()

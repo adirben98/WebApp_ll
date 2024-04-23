@@ -11,11 +11,10 @@ export interface IRecepie {
     createdAt:Date
     image: string;
     likes: number;
+    likedBy: string[];
 }
 const RecepieSchema = new mongoose.Schema<IRecepie>({
-    _id: {
-        type: String,
-    },
+   
     name: {
         type: String,
         required: true,
@@ -49,6 +48,11 @@ const RecepieSchema = new mongoose.Schema<IRecepie>({
         type: Number,
         default: 0
     },
+    likedBy:
+    {
+        type: [String],
+        default: []
+    }
     
 });
 
