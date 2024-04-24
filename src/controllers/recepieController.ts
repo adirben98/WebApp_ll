@@ -34,6 +34,25 @@ class recepieController extends BaseController<IRecepie>{
             res.status(400).send(error.message)
         }
     }
+    async likeDincrement(req: AuthRequest, res: Response){
+        try {
+            const recipeId = req.params.id;
+            const userId = req.user._id;
+
+            const recepie = await Recepie.findById(recipeId)
+            if (recepie.likedBy.includes(userId)){
+                recepie.likes-=1
+                recepie.likedBy.filter((id)=>id!==userId)
+                await recepie.save()
+                res.status(200).send(recepie)
+            }
+            else{
+                res.status(400).send("You didn't like this recepie")
+            }
+        } catch (error) {
+            res.status(400).send(error.message)
+        }
+    }
 
 }
 

@@ -38,9 +38,9 @@ import authController from "../controllers/authController";
  *           type: string
  *           description: The user password
  *       example:
- *         email: 'bob@gmail.com'
- *         full_name: 'Bob the builder'
- *         password: '123456'
+ *         email: 'Idan@gmail.com'
+ *         full_name: 'Idan the the'
+ *         password: '1234'
  */
 /**
 * @swagger
