@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 
-export interface IRecepie {
+export interface IRecipe {
     _id: string;
     name: string;
     author: string;
@@ -13,7 +13,7 @@ export interface IRecepie {
     likes: number;
     likedBy: string[];
 }
-const RecepieSchema = new mongoose.Schema<IRecepie>({
+const RecipeSchema = new mongoose.Schema<IRecipe>({
    
     name: {
         type: String,
@@ -56,4 +56,4 @@ const RecepieSchema = new mongoose.Schema<IRecepie>({
     
 });
 
-export default mongoose.model<IRecepie>("Recepie", RecepieSchema);
+export default mongoose.model<IRecipe>("Recipe", RecipeSchema);

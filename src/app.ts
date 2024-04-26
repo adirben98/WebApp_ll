@@ -1,6 +1,6 @@
 import express, { Express } from "express";
 const app = express();
-import recepieRouter from "./Routes/recepieRouter";
+import recipeRouter from "./Routes/recipeRouter";
 import commentRouter from "./Routes/commentRouter";
 import authRouter from "./Routes/authRouter";
 import env from "dotenv"
@@ -9,7 +9,6 @@ import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUI from "swagger-ui-express";
-import e from "express";
 
 
 const init = () => {
@@ -39,7 +38,7 @@ const init = () => {
 
       app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
       app.use("/auth", authRouter);
-      app.use("/recepie", recepieRouter);
+      app.use("/recipe", recipeRouter);
       app.use("/comment", commentRouter);
 
       resolve(app);

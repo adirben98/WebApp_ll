@@ -1,25 +1,24 @@
 import express from "express"
-const recepieRouter = express.Router();
-import recepieController from "../controllers/recepieController"
+const recipeRouter = express.Router();
+import recipeController from "../controllers/recipeController"
 import {authMiddleware} from "../controllers/authController"
 
 
 /**
 * @swagger
 * tags:
-*   name: Recepie
-*   description: The Recepie API
+*   name: Recipe
+*   description: The Recipe API
 */
 /**
 /**
  * @swagger
  * components:
  *   schemas:
- *     Recepie:
+ *     Recipe:
  *       type: object
  *       required:
  *         - name
- *         - author
  *         - category
  *         - ingredients
  *         - instructions
@@ -28,9 +27,6 @@ import {authMiddleware} from "../controllers/authController"
  *         name:
  *           type: string
  *           description: The recipe name
- *         author:
- *           type: string
- *           description: The recipe author
  *         category:
  *           type: string
  *           description: The recipe category
@@ -80,37 +76,37 @@ import {authMiddleware} from "../controllers/authController"
 
 /**
  * @swagger
- * /recepie:
+ * /recipe:
  *   post:
  *     security:
  *       - bearerAuth: []
  *     tags:
- *       - Recepie
- *     summary: Create a new recepie
+ *       - Recipe
+ *     summary: Create a new Recipe
  *     description:  need to provide the access token in the auth header.
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Recepie'
+ *             $ref: '#/components/schemas/Recipe'
  *     responses:
  *       200:
- *         description: The recepie was successfully created
+ *         description: The recipe was successfully created
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Recepie'
+ *               $ref: '#/components/schemas/Recipe'
  */
-recepieRouter.post("/",authMiddleware,recepieController.post.bind(recepieController))
+recipeRouter.post("/",authMiddleware,recipeController.post.bind(recipeController))
 
 
 /**
  * @swagger
- * /recepie/topFive:
+ * /recipe/topFive:
  *   get:
  *     tags:
- *       - Recepie
+ *       - Recipe
  *     summary: Get top 5 recipes
  *     description: Retrieve the top 5 recipes based on some criteria (e.g., popularity, ratings)
  *     responses:
@@ -121,19 +117,19 @@ recepieRouter.post("/",authMiddleware,recepieController.post.bind(recepieControl
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/Recepie'
+ *                 $ref: '#/components/schemas/Recipe'
  */
 
-recepieRouter.get("/topFive",recepieController.getTopFive)
+recipeRouter.get("/topFive",recipeController.getTopFive)
 
 /**
  * @swagger
- * /recepie/{id}:
+ * /recipe/{id}:
  *   get:
  *     security:
  *       - bearerAuth: []
  *     tags:
- *       - Recepie
+ *       - Recipe
  *     summary: Get a recipe by id
  *     description:  need to provide the access token in the auth header.
  *     parameters:
@@ -149,18 +145,18 @@ recepieRouter.get("/topFive",recepieController.getTopFive)
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Recepie'
+ *               $ref: '#/components/schemas/Recipe'
  */
-recepieRouter.get("/:id",authMiddleware,recepieController.get.bind(recepieController))
+recipeRouter.get("/:id",authMiddleware,recipeController.get.bind(recipeController))
 
 /**
  * @swagger
- * /recepie/{id}/like:
+ * /recipe/{id}/like:
  *   post:
  *     security:
  *       - bearerAuth: []
  *     tags:
- *       - Recepie
+ *       - Recipe
  *     summary: Like a recipe
  *     description:  need to provide the access token in the auth header.
  *     parameters:
@@ -176,20 +172,20 @@ recepieRouter.get("/:id",authMiddleware,recepieController.get.bind(recepieContro
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Recepie'
+ *               $ref: '#/components/schemas/Recipe'
  */
-recepieRouter.post("/:id/like",authMiddleware,recepieController.likeIncrement.bind(recepieController))
+recipeRouter.post("/:id/like",authMiddleware,recipeController.likeIncrement.bind(recipeController))
 
 /**
  * @swagger
- * /recepie/{id}/unlike:
+ * /recipe/{id}/unlike:
  *   post:
  *     security:
  *       - bearerAuth: []
  *     tags:
- *       - Recepie
+ *       - Recipe
  *     summary: Unlike a recipe
- *     description:  need to provide the refresh token in the auth header.
+ *     description:  need to provide the access token in the auth header.
  *     parameters:
  *       - in: path
  *         name: id
@@ -203,64 +199,66 @@ recepieRouter.post("/:id/like",authMiddleware,recepieController.likeIncrement.bi
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Recepie'
+ *               $ref: '#/components/schemas/Recipe'
  */
-recepieRouter.post("/:id/unlike",authMiddleware,recepieController.likeDincrement.bind(recepieController))
+recipeRouter.post("/:id/unlike",authMiddleware,recipeController.likeDincrement.bind(recipeController))
 
 
 /**
  * @swagger
- * /recepie:
+ * /recipe:
  *   put:
  *     security:
  *       - bearerAuth: []
  *     tags:
- *       - Recepie
+ *       - Recipe
  *     summary: Edit a recipe
- *     description: Need to provide the refresh token in the auth header.
+ *     description: Need to provide the access token in the auth header. Also, provide the recipe id.
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Recepie'
+ *             $ref: '#/components/schemas/Recipe'
+ *           examples:
+ *             recipeEditExample:
+ *              value:
+ *               _id: "123124143"
+ *               name: "mac&cheese"
+ *               category: "dinner"
+ *               ingredients:["cheese","salt","pasta","cream","pepper","onion"]
+ *               instructions:["cook pasta","cook cream with salt","add all with cheese","add pepper and onion"]
+ *               image: "https://example.com/mac-and-cheese.jpg"
+ * 
+ * 
  *     responses:
  *       200:
  *         description: The recipe was successfully edited
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Recepie'
+ *               $ref: '#/components/schemas/Recipe'
  */
-recepieRouter.put("/",authMiddleware,recepieController.edit.bind(recepieController))
+recipeRouter.put("/",authMiddleware,recipeController.edit.bind(recipeController))
 
 /**
  * @swagger
- * /recepie:
+ * /recipe/{id}:
  *   delete:
  *     security:
  *       - bearerAuth: []
  *     tags:
- *       - Recepie
+ *       - Recipe
+ *     parameters:
+ *      - in: path
+ *        name: id
+ *        required: true
  *     summary: Delete a recipe
- *     description: Need to provide the refresh token in the auth header.
+ *     description: Need to provide the access token in the auth header.
  *     responses:
  *       200:
- *         description: The recipe was successfully deleted
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Recepie'
+ *         description: The recipe was successfully deleted!
  */
-recepieRouter.delete("/",authMiddleware,recepieController.delete.bind(recepieController))
+recipeRouter.delete("/:id",authMiddleware,recipeController.delete.bind(recipeController))
 
-
-
-
-
-
-
-
-
-
-export default recepieRouter;
+export default recipeRouter;

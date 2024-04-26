@@ -3,8 +3,8 @@ import init from "../app";
 import mongoose from "mongoose";
 import { App } from "supertest/types";
 import User from "../models/userModel";
-import Recepie from "../models/recepieModel";
-import { IRecepie } from "./recepie.test";
+import Recipe from "../models/recipeModel";
+import { IRecipe } from "./recipe.test";
 
 export type TestUser = {
   email: string,
@@ -19,7 +19,7 @@ const user: TestUser = {
   "full_name":"Idan",
   "password": "445566"
 }
-const testRecepie:IRecepie={
+const testRecipe:IRecipe={
   name:"mac&cheese",
   author:"Eliav",
   category:"breakfast",
@@ -34,7 +34,7 @@ beforeAll(async () => {
   app = await init();
   console.log("Before all");
   await User.deleteMany({ "email": user.email });
-  await Recepie.deleteMany({ "author":"Idan" });
+  await Recipe.deleteMany({ "author":"Idan" });
   
 });
 
@@ -59,12 +59,12 @@ describe("Register Tests", () => {
 
 
   test("Middleware", async () => {
-    const res = await request(app).post("/recepie").send(testRecepie);
+    const res = await request(app).post("/recipe").send(testRecipe);
     expect(res.statusCode).not.toEqual(201);
 
-    const res2 = await request(app).post("/recepie").set("Authorization", "Bearer " + user.accessToken).send(testRecepie);
+    const res2 = await request(app).post("/recipe").set("Authorization", "Bearer " + user.accessToken).send(testRecipe);
     expect(res2.statusCode).toEqual(201);
-    testRecepie._id = res2.body._id;
+    testRecipe._id = res2.body._id;
 
    
   });
@@ -73,7 +73,7 @@ describe("Register Tests", () => {
 
   test("Refresh Token", async () => {
     await new Promise(r => setTimeout(r, 6000));
-    const res = await request(app).get("/recepie/"+testRecepie._id).set("Authorization", "Bearer " + user.accessToken).send();
+    const res = await request(app).get("/recipe/"+testRecipe._id).set("Authorization", "Bearer " + user.accessToken).send();
     expect(res.statusCode).not.toEqual(200);
 
     const res2 = await request(app).get("/auth/refresh")
@@ -85,7 +85,7 @@ describe("Register Tests", () => {
     user.accessToken = res2.body.accessToken; 
     user.refreshToken = res2.body.refreshToken;
 
-    const res3 = await request(app).get("/recepie/"+testRecepie._id).set("Authorization", "Bearer " + user.accessToken).send();
+    const res3 = await request(app).get("/recipe/"+testRecipe._id).set("Authorization", "Bearer " + user.accessToken).send();
     expect(res3.statusCode).toEqual(200);
   });
 

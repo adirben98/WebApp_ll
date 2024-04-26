@@ -2,11 +2,11 @@ import request from "supertest";
 import init from "../app";
 import mongoose from "mongoose";
 import { App } from "supertest/types";
-import Recepie from "../models/recepieModel"
+import Recipe from "../models/recipeModel"
 import {TestUser} from "./auth.test"
 import User from "../models/userModel"
 
-export interface IRecepie {
+export interface IRecipe {
     _id?: string;  
     name: string;
     author: string;
@@ -19,7 +19,7 @@ export interface IRecepie {
 }
 
 
-const testRecepie:IRecepie={
+const testRecipe:IRecipe={
     
     name:"mac&cheese",
     author:"IDAN",
@@ -42,7 +42,7 @@ beforeAll(async () => {
   app = await init();
   console.log("Before all");
   await User.deleteMany({ email: user.email });
-  await Recepie.deleteMany();
+  await Recipe.deleteMany();
   await request(app).post("/auth/register").send(user);
   const res = await request(app).post("/auth/login").send(user);
   user.accessToken = res.body.accessToken;
@@ -52,9 +52,9 @@ afterAll(async () => {
     await mongoose.connection.close();
   });
 
-describe("Recepie Tests", () => { 
-    test("Post Recepie",async ()=>{
-        const res = await request(app).post("/recepie").set("Authorization", "Bearer " + user.accessToken).send(testRecepie);
+describe("Recipe Tests", () => { 
+    test("Post Recipe",async ()=>{
+        const res = await request(app).post("/recipe").set("Authorization", "Bearer " + user.accessToken).send(testRecipe);
         expect(res.statusCode).toEqual(201);
         expect(res.body.author).toEqual("Idan the chef")
         expect(res.body.name).toEqual("mac&cheese")
@@ -65,12 +65,12 @@ describe("Recepie Tests", () => {
         expect(res.body.likes).toEqual(0)
         expect(res.body.likedBy).toEqual([])    
         
-        testRecepie._id=res.body._id
+        testRecipe._id=res.body._id
     }) 
 
 
-    test("Get Recepie By Id", async () => {
-        const res = await request(app).get("/recepie/"+testRecepie._id).set("Authorization", "Bearer " + user.accessToken).send();
+    test("Get Recipe By Id", async () => {
+        const res = await request(app).get("/recipe/"+testRecipe._id).set("Authorization", "Bearer " + user.accessToken).send();
         expect(res.statusCode).toEqual(200);
         expect(res.body.name).toEqual("mac&cheese")
         expect(res.body.category).toEqual("breakfast")
@@ -82,33 +82,33 @@ describe("Recepie Tests", () => {
 
     })
 
-    test("Get Top Five Recepie", async () => {
-        const id=testRecepie._id
+    test("Get Top Five Recipe", async () => {
+        const id=testRecipe._id
         for (let i = 0; i < 10; i++) {
-            testRecepie._id = undefined;
+            testRecipe._id = undefined;
             
-            testRecepie.name = "recepie" + i;
-            testRecepie.likes = i;
-            await request(app).post("/recepie").set("Authorization", "Bearer " + user.accessToken).send(testRecepie);
+            testRecipe.name = "recipe" + i;
+            testRecipe.likes = i;
+            await request(app).post("/recipe").set("Authorization", "Bearer " + user.accessToken).send(testRecipe);
         }
-        const res = await request(app).get("/recepie/topFive").set("Authorization", "Bearer " + user.accessToken).send();
+        const res = await request(app).get("/recipe/topFive").set("Authorization", "Bearer " + user.accessToken).send();
         expect(res.statusCode).toEqual(200);
         for (let i = 0; i < 5; i++) {
-            expect(res.body[i].name).toEqual("recepie" + (9 - i))
+            expect(res.body[i].name).toEqual("recipe" + (9 - i))
             expect(res.body[i].likes).toEqual(9 - i)
         }
-        testRecepie._id = id;
+        testRecipe._id = id;
 
 
     })
 
-    test("Edit Recepie",async () => {
-        testRecepie.category="dinner"
-        testRecepie.name="mac&cheese"
+    test("Edit Recipe",async () => {
+        testRecipe.category="dinner"
+        testRecipe.name="mac&cheese"
 
-        const res = await request(app).put("/recepie/").set("Authorization", "Bearer " + user.accessToken).send(testRecepie);
+        const res = await request(app).put("/recipe/").set("Authorization", "Bearer " + user.accessToken).send(testRecipe);
         expect(res.statusCode).toEqual(200);
-        expect(res.body._id).toEqual(testRecepie._id )
+        expect(res.body._id).toEqual(testRecipe._id )
         expect(res.body.name).toEqual("mac&cheese")
         expect(res.body.category).toEqual("dinner")
         expect(res.body.ingredients).toEqual(["cheese","salt","pasta","cream"])
@@ -119,11 +119,11 @@ describe("Recepie Tests", () => {
 
 
 
-    test("Like Recepie",async () => {
-        const res = await request(app).get("/recepie/"+testRecepie._id).set("Authorization", "Bearer " + user.accessToken).send()
+    test("Like Recipe",async () => {
+        const res = await request(app).get("/recipe/"+testRecipe._id).set("Authorization", "Bearer " + user.accessToken).send()
         const likes=res.body.likes
     
-        const res2=await request(app).post("/recepie/"+testRecepie._id+"/like").set("Authorization", "Bearer " + user.accessToken).send()
+        const res2=await request(app).post("/recipe/"+testRecipe._id+"/like").set("Authorization", "Bearer " + user.accessToken).send()
         expect(res2.statusCode).toEqual(200);
         expect(res2.body.name).toEqual("mac&cheese")
         expect(res2.body.category).toEqual("dinner")
@@ -131,7 +131,7 @@ describe("Recepie Tests", () => {
         expect(res2.body.instructions).toEqual(["cook pasta","cook cream with salt","add all with cheese"])
         expect(res2.body.likes).toEqual(likes+1)
 
-        const res3 = await request(app).get("/recepie/"+testRecepie._id+"/like").set("Authorization", "Bearer " + user.accessToken).send()
+        const res3 = await request(app).get("/recipe/"+testRecipe._id+"/like").set("Authorization", "Bearer " + user.accessToken).send()
         expect(res3.statusCode).not.toEqual(200);
 
     
@@ -139,11 +139,11 @@ describe("Recepie Tests", () => {
     })
 
 
-    test("Unlike Recepie",async () => {
-        const res = await request(app).get("/recepie/"+testRecepie._id).set("Authorization", "Bearer " + user.accessToken).send()
+    test("Unlike Recipe",async () => {
+        const res = await request(app).get("/recipe/"+testRecipe._id).set("Authorization", "Bearer " + user.accessToken).send()
         const likes=res.body.likes
     
-        const res2=await request(app).post("/recepie/"+testRecepie._id+"/unlike").set("Authorization", "Bearer " + user.accessToken).send()
+        const res2=await request(app).post("/recipe/"+testRecipe._id+"/unlike").set("Authorization", "Bearer " + user.accessToken).send()
         expect(res2.statusCode).toEqual(200);
         expect(res2.body.name).toEqual("mac&cheese")
         expect(res2.body.category).toEqual("dinner")
@@ -151,7 +151,7 @@ describe("Recepie Tests", () => {
         expect(res2.body.instructions).toEqual(["cook pasta","cook cream with salt","add all with cheese"])
         expect(res2.body.likes).toEqual(likes-1)
 
-        const res3 = await request(app).get("/recepie/"+testRecepie._id+"/unlike").set("Authorization", "Bearer " + user.accessToken).send()
+        const res3 = await request(app).get("/recipe/"+testRecipe._id+"/unlike").set("Authorization", "Bearer " + user.accessToken).send()
         expect(res3.statusCode).not.toEqual(200);
 
     
@@ -159,11 +159,13 @@ describe("Recepie Tests", () => {
     })
 
 
-    test("Delete Recepie",async () => {
-        const res = await request(app).delete("/recepie").set("Authorization", "Bearer " + user.accessToken).send(testRecepie);
-        expect(res.statusCode).toEqual(200);
-        const recepie=await Recepie.find(testRecepie)
-        expect(recepie).toEqual([])
+    test("Delete Recipe",async () => {
+        const res=await request(app).get("/recipe/"+testRecipe._id).set("Authorization", "Bearer " + user.accessToken).send()
+        expect(res.statusCode).toEqual(200)
+        const res2 = await request(app).delete("/recipe/"+testRecipe._id).set("Authorization", "Bearer " + user.accessToken).send();
+        expect(res2.statusCode).toEqual(200);
+        const res3=await request(app).get("/recipe/"+testRecipe._id).set("Authorization", "Bearer " + user.accessToken).send()
+        expect(res3.body).toEqual({})
     })
 
 

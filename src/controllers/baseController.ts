@@ -13,14 +13,14 @@ class BaseController<ModelInterface>{
 
     async get(req: Request, res: Response) {
         try {
-            if (req.params.id != null || req.params.recepieId != null) {
+            if (req.params.id != null || req.params.recipeId != null) {
                 if (req.params.id){
                 const modelObject = await this.model.findById(req.params.id);
                 return res.status(200).send(modelObject);
                 }
 
                 else{
-                const modelObject = await this.model.find({"recepieId":req.params.recepieId});
+                const modelObject = await this.model.find({"recipeId":req.params.recipeId});
                 return res.status(200).send(modelObject);
                 }
             }
@@ -60,7 +60,7 @@ class BaseController<ModelInterface>{
             res.status(200).json(updatedModel);
 
             }
-            res.status(500).send();
+            res.status(400).send();
             
             
         } catch (err) {
@@ -70,16 +70,12 @@ class BaseController<ModelInterface>{
 
     async delete(req: Request, res: Response) {
         try {
-            if (req.body){
-                const modelObject = req.body;
-                const deletedModel = await this.model.findByIdAndDelete(
-                    modelObject._id,
-                    modelObject,
-                );
-            return res.status(200).json(deletedModel);
+            if (req.params.id!=null){
+                await this.model.findByIdAndDelete({"_id": req.params.id});
+                return res.status(200).send();
 
             }
-            return res.status(500).send();
+            return res.status(400).send();
 
         } catch (err) {
             res.status(500).send(err.message);

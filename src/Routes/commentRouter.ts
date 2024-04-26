@@ -18,8 +18,7 @@ import {authMiddleware} from "../controllers/authController"
  *       type: object
  *       required:
  *         - content
- *         - author
- *         - recepieId
+ *         - recipeid
  *       properties:
  *         content:
  *           type: string
@@ -27,7 +26,7 @@ import {authMiddleware} from "../controllers/authController"
  *         author:
  *           type: string
  *           description: The comment author
- *         recepieId:
+ *         recipeid:
  *           type: string
  *           description: The comment recipe id
  *         createdAt:
@@ -36,15 +35,15 @@ import {authMiddleware} from "../controllers/authController"
  *           description: The comment creation date
  *       example:
  *         content: "that is a great recipe"
- *         author: "Idan the builder"
- *         recepieId: "66296a8f1c761284e4a12434"
- *         createdAt: "2022-01-01T00:00:00.000Z"
+ *         recipeId: "123124143"
+ *    
+ *         
  */
 
 
 /**
  * @swagger
- * /comment/{recepieId}:
+ * /comment/{recipeId}:
  *   get:
  *     summary: Get comments by recipe id
  *     description: Need to provide the access token in the auth header.
@@ -53,7 +52,7 @@ import {authMiddleware} from "../controllers/authController"
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: recepieId
+ *         name: recipeId
  *         required: true
  *         schema:
  *           type: string
@@ -66,21 +65,26 @@ import {authMiddleware} from "../controllers/authController"
  *             schema:
  *               $ref: '#/components/schemas/Comment'
  */
-commentRouter.get("/:recepieId",authMiddleware,commentController.get.bind(commentController))     
+commentRouter.get("/:recipeId",authMiddleware,commentController.get.bind(commentController))     
 
 /**
  * @swagger
  * /comment:
  *   post:
  *     summary: Post a comment
- *     description: Need to provide the access token in the auth header.
+ *     description: Need to provide the access token in the auth header. Also, provide the recipe id you comment for.
  *     tags: [Comment]
+ *     security:
+ *      - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             $ref: '#/components/schemas/Comment'
+ *     example:
+ *       content: "that is a great recipe"
+ *       recipeId: "123124143"
  *     responses:
  *       201:
  *         description: The comment was successfully created
@@ -88,6 +92,7 @@ commentRouter.get("/:recepieId",authMiddleware,commentController.get.bind(commen
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Comment'
+ 
  */
 commentRouter.post("/",authMiddleware,commentController.post.bind(commentController))
 
@@ -96,14 +101,22 @@ commentRouter.post("/",authMiddleware,commentController.post.bind(commentControl
  * /comment:
  *   put:
  *     summary: Edit a comment
- *     description: Need to provide the access token in the auth header.
+ *     description: Need to provide the access token in the auth header. Also, provide the comment id and the new content.
  *     tags: [Comment]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             $ref: '#/components/schemas/Comment'
+ *           examples:
+ *             commentEditExample:
+ *               value:
+ *                 _id: "123124143"
+ *                 content: "just edited my comment"
+ *
  *     responses:
  *       200:
  *         description: The comment was successfully edited
@@ -112,24 +125,27 @@ commentRouter.post("/",authMiddleware,commentController.post.bind(commentControl
  *             schema:
  *               $ref: '#/components/schemas/Comment'
  */
+
 commentRouter.put("/",authMiddleware,commentController.edit.bind(commentController))
 
 /**
  * @swagger
- * /comment:
+ * /comment/{id}:
  *   delete:
  *     summary: Delete a comment
  *     description: Need to provide the access token in the auth header.
  *     tags: [Comment]
+ *     security:
+ *     - bearerAuth: []
+ *     parameters:
+ *      - in: path
+ *        name: id
+ *        required: true
  *     responses:
  *       200:
- *         description: The comment was successfully deleted
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Comment'
+ *         description: The comment was successfully deleted!
  */
-commentRouter.delete("/",authMiddleware,commentController.delete.bind(commentController))
+commentRouter.delete("/:id",authMiddleware,commentController.delete.bind(commentController))
 
 
 

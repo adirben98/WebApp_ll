@@ -4,7 +4,7 @@ export interface IComment {
     _id: string;
     author: string;
     content: string;
-    recepieId: string;
+    recipeId: string;
     createdAt: Date;
     edited: boolean;
 }
@@ -19,7 +19,7 @@ const commentSchema=new mongoose.Schema<IComment>({
         type:String,
         required:true
     },
-    recepieId:{
+    recipeId:{
         type:String,
         required:true
     },

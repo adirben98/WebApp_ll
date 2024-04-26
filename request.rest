@@ -8,7 +8,7 @@ Content-Type: application/json
   "password": "445566"
 }
 ###
-POST http://localhost:3000/recepie 
+POST http://localhost:3000/recipe 
 Content-Type: application/json
 
 {
