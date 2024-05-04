@@ -58,6 +58,7 @@ class recipeController extends BaseController<IRecipe>{
             res.status(400).send(error.message)
         }
     }
+    
 
 }
 

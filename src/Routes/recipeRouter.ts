@@ -2,6 +2,7 @@ import express from "express"
 const recipeRouter = express.Router();
 import recipeController from "../controllers/recipeController"
 import {authMiddleware} from "../controllers/authController"
+import getFiveRandomRecipe from "../controllers/restApi"
 
 
 /**
@@ -222,14 +223,13 @@ recipeRouter.post("/:id/unlike",authMiddleware,recipeController.likeDincrement.b
  *             $ref: '#/components/schemas/Recipe'
  *           examples:
  *             recipeEditExample:
- *              value:
- *               _id: "123124143"
- *               name: "mac&cheese"
- *               category: "dinner"
- *               ingredients:["cheese","salt","pasta","cream","pepper","onion"]
- *               instructions:["cook pasta","cook cream with salt","add all with cheese","add pepper and onion"]
- *               image: "https://example.com/mac-and-cheese.jpg"
- * 
+ *               value:
+ *                 _id: "123124143"
+ *                 name: "mac&cheese"
+ *                 category: "dinner"
+ *                 ingredients: ["cheese", "salt", "pasta", "cream", "pepper", "onion"]
+ *                 instructions: ["cook pasta", "cook cream with salt", "add all with cheese", "add pepper and onion"]
+ *                 image: "https://example.com/mac-and-cheese.jpg"
  * 
  *     responses:
  *       200:
@@ -239,6 +239,7 @@ recipeRouter.post("/:id/unlike",authMiddleware,recipeController.likeDincrement.b
  *             schema:
  *               $ref: '#/components/schemas/Recipe'
  */
+
 recipeRouter.put("/",authMiddleware,recipeController.edit.bind(recipeController))
 
 /**
@@ -260,5 +261,7 @@ recipeRouter.put("/",authMiddleware,recipeController.edit.bind(recipeController)
  *         description: The recipe was successfully deleted!
  */
 recipeRouter.delete("/:id",authMiddleware,recipeController.delete.bind(recipeController))
+
+
 
 export default recipeRouter;
