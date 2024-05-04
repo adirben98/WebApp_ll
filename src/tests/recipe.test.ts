@@ -12,7 +12,7 @@ export interface IRecipe {
     author: string;
     category: string;
     ingredients: string[];
-    instructions: string[];
+    instructions: string;
     image: string;
     likes?: number;
     likedBy?: string[];  
@@ -25,7 +25,7 @@ const testRecipe:IRecipe={
     author:"IDAN",
     category:"breakfast",
     ingredients:["cheese","salt","pasta","cream"],
-    instructions:["cook pasta","cook cream with salt","add all with cheese"],
+    instructions:"cook pasta, cook cream with salt ,add all with cheese",
     image:"https://www.google.com/search?q=mac+and+cheese&rlz=1C1GCEU_enIL832IL832&source=lnms&tbm=isch&sa=X&ved=0ahUKEwiJ9J6V9JLzAhXQzIUKHbJzDZQQ_AUIBygC&biw=1366&bih=657#imgrc=5",
     likes:0,
     likedBy:[]
@@ -60,7 +60,7 @@ describe("Recipe Tests", () => {
         expect(res.body.name).toEqual("mac&cheese")
         expect(res.body.category).toEqual("breakfast")
         expect(res.body.ingredients).toEqual(["cheese","salt","pasta","cream"])
-        expect(res.body.instructions).toEqual(["cook pasta","cook cream with salt","add all with cheese"])
+        expect(res.body.instructions).toEqual("cook pasta, cook cream with salt ,add all with cheese")
         expect(res.body.image).toEqual("https://www.google.com/search?q=mac+and+cheese&rlz=1C1GCEU_enIL832IL832&source=lnms&tbm=isch&sa=X&ved=0ahUKEwiJ9J6V9JLzAhXQzIUKHbJzDZQQ_AUIBygC&biw=1366&bih=657#imgrc=5")
         expect(res.body.likes).toEqual(0)
         expect(res.body.likedBy).toEqual([])    
@@ -75,7 +75,7 @@ describe("Recipe Tests", () => {
         expect(res.body.name).toEqual("mac&cheese")
         expect(res.body.category).toEqual("breakfast")
         expect(res.body.ingredients).toEqual(["cheese","salt","pasta","cream"])
-        expect(res.body.instructions).toEqual(["cook pasta","cook cream with salt","add all with cheese"])
+        expect(res.body.instructions).toEqual("cook pasta, cook cream with salt ,add all with cheese")
         expect(res.body.image).toEqual("https://www.google.com/search?q=mac+and+cheese&rlz=1C1GCEU_enIL832IL832&source=lnms&tbm=isch&sa=X&ved=0ahUKEwiJ9J6V9JLzAhXQzIUKHbJzDZQQ_AUIBygC&biw=1366&bih=657#imgrc=5")
         expect(res.body.likes).toEqual(0)
         expect(res.body.likedBy).toEqual([])
@@ -112,7 +112,7 @@ describe("Recipe Tests", () => {
         expect(res.body.name).toEqual("mac&cheese")
         expect(res.body.category).toEqual("dinner")
         expect(res.body.ingredients).toEqual(["cheese","salt","pasta","cream"])
-        expect(res.body.instructions).toEqual(["cook pasta","cook cream with salt","add all with cheese"])
+        expect(res.body.instructions).toEqual("cook pasta, cook cream with salt ,add all with cheese")
 
 
     })
@@ -128,7 +128,7 @@ describe("Recipe Tests", () => {
         expect(res2.body.name).toEqual("mac&cheese")
         expect(res2.body.category).toEqual("dinner")
         expect(res2.body.ingredients).toEqual(["cheese","salt","pasta","cream"])
-        expect(res2.body.instructions).toEqual(["cook pasta","cook cream with salt","add all with cheese"])
+        expect(res2.body.instructions).toEqual("cook pasta, cook cream with salt ,add all with cheese")
         expect(res2.body.likes).toEqual(likes+1)
 
         const res3 = await request(app).get("/recipe/"+testRecipe._id+"/like").set("Authorization", "Bearer " + user.accessToken).send()
@@ -148,7 +148,7 @@ describe("Recipe Tests", () => {
         expect(res2.body.name).toEqual("mac&cheese")
         expect(res2.body.category).toEqual("dinner")
         expect(res2.body.ingredients).toEqual(["cheese","salt","pasta","cream"])
-        expect(res2.body.instructions).toEqual(["cook pasta","cook cream with salt","add all with cheese"])
+        expect(res2.body.instructions).toEqual("cook pasta, cook cream with salt ,add all with cheese")
         expect(res2.body.likes).toEqual(likes-1)
 
         const res3 = await request(app).get("/recipe/"+testRecipe._id+"/unlike").set("Authorization", "Bearer " + user.accessToken).send()

@@ -7,7 +7,7 @@ export interface IRecipe {
     author: string;
     category: string;
     ingredients: string[];
-    instructions: string[];
+    instructions: string;
     createdAt:Date
     image: string;
     likes: number;
@@ -32,7 +32,7 @@ const RecipeSchema = new mongoose.Schema<IRecipe>({
         required: true,
     },
     instructions: {
-        type: [String],
+        type: String,
         required: true,
     },
     createdAt: {

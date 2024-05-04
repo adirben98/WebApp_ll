@@ -41,7 +41,7 @@ const init = () => {
       app.use("/auth", authRouter);
       app.use("/recipe", recipeRouter);
       app.use("/comment", commentRouter);
-      app.use("/random",restApiRouter)
+      app.use("/restApi",restApiRouter)
 
       resolve(app);
     });
