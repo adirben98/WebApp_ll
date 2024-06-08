@@ -37,6 +37,14 @@ const init = () => {
       app.use(bodyParser.urlencoded({ extended: true }));
       app.use(bodyParser.json());
 
+      app.use((req, res, next) => {
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Headers","*");
+        res.header("Access-Control-Allow-Methods","*");
+        
+        next();
+      })
+
       app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
       app.use("/auth", authRouter);
       app.use("/recipe", recipeRouter);
