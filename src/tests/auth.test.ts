@@ -8,7 +8,7 @@ import { IRecipe } from "./recipe.test";
 
 export type TestUser = {
   email: string,
-  full_name:string
+  username:string
   password: string,
   accessToken?: string,
   refreshToken?: string
@@ -16,7 +16,7 @@ export type TestUser = {
 
 const user: TestUser = {
   "email": "shlomi@gmail.com",
-  "full_name":"Idan",
+  "username":"Idan",
   "password": "445566"
 }
 const testRecipe:IRecipe={

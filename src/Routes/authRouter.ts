@@ -1,6 +1,7 @@
 import express from "express";
 const authRouter = express.Router();
 import authController from "../controllers/authController";
+import { auth } from "google-auth-library";
 
 /**
 * @swagger
@@ -25,13 +26,13 @@ import authController from "../controllers/authController";
  *       type: object
  *       required:
  *         - email
- *         - full_name
+ *         - username
  *         - password
  *       properties:
  *         email:
  *           type: string
  *           description: The user email
- *         full_name:
+ *         username:
  *           type: string
  *           description: The user full name
  *         password:
@@ -39,7 +40,7 @@ import authController from "../controllers/authController";
  *           description: The user password
  *       example:
  *         email: 'Idan@gmail.com'
- *         full_name: 'Idan the chef'
+ *         username: 'Idan the chef'
  *         password: '1234'
  */
 /**
@@ -88,6 +89,25 @@ import authController from "../controllers/authController";
 
 
 authRouter.post("/register", authController.register);
+/**
+ * @swagger
+ * /auth/isEmailTaken:
+ *   post:
+ *     summary: checks if an email is already taken
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/User'
+ *     responses:
+ *       200:
+ *         description: The email is available
+ *       400:
+ *         description: The email is already taken
+ */
+authRouter.post("/isEmailTaken", authController.isEmailTaken);
 
 /**
 * @swagger

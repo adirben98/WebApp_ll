@@ -8,6 +8,7 @@
     "start": "tsc && node dist/src/server.js",
     "lint": "eslint . --ext .ts",
     "test": "tsc && jest --forceExit",
+    "testFile": "tsc && jest --detectOpenHandles --forceExit ./src/tests/file.test.ts",
     "testAuth": "tsc && jest --detectOpenHandles --forceExit ./src/tests/auth.test.ts",
     "testRecipe": "tsc && jest --detectOpenHandles --forceExit ./src/tests/recipe.test.ts",
     "testComment": "tsc && jest --detectOpenHandles --forceExit ./src/tests/comment.test.ts"
@@ -25,7 +26,8 @@
     "google-auth-library": "^9.8.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.3.2",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
@@ -33,6 +35,7 @@
     "@types/express": "^4.17.1",
     "@types/jest": "^29.5.12",
     "@types/jsonwebtoken": "^9.0.6",
+    "@types/multer": "^1.4.11",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.6",
     "eslint": "^9.0.0",

@@ -8,7 +8,8 @@ import { Document } from "mongoose";
 const register = async (req: Request, res: Response) => {
     const email = req.body.email;
     const password = req.body.password;
-    const full_name = req.body.full_name;
+    const username = req.body.username;
+    const imgUrl = req.body.imgUrl;
     if (email === undefined || password === undefined) {
         return res.status(400).send("Email and password are required");
     }
@@ -19,10 +20,33 @@ const register = async (req: Request, res: Response) => {
         }
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
-        const newUser = await User.create({ email: email,full_name:full_name, password: hashedPassword });
-        return res.send(newUser);
+        const newUser = await User.create({ email: email,username:username,imgUrl:imgUrl, password: hashedPassword });
+        
+        const tokens = await generateTokens(newUser);
+        if (tokens == null) {
+            return res.status(400).send("Error generating tokens");
+        }
+        return res.status(200).send(tokens);
     } catch (err) {
         return res.status(400).send(err.message);
+    }
+}
+const isEmailTaken=async(req: Request, res: Response)=>{
+    const email = req.body.email;
+    if (email === undefined) {
+        return res.status(400).send("Email is required");
+    }
+    try {
+        const user = await User.findOne({ email:email})
+        if (user) {
+            return res.status(400).send("Email already exists");
+        }
+        else{
+            return res.status(200).send("Email is available");
+        }
+    } catch (err) {
+        return res.status(400).send(err.message);
+
     }
 }
 
@@ -92,7 +116,7 @@ const googleLogin = async (req: Request, res: Response) => {
         if (user == null) {
             user = await User.create({
                 email: email,
-                full_name: payload.name,
+                username: payload.name,
                 password: "google-login"
 
              });
@@ -192,4 +216,4 @@ export const authMiddleware = async (req: AuthRequest, res: Response, next: Next
 
 
 
-export default { register, login, logout, authMiddleware, refresh }
+export default { register,isEmailTaken, login, logout, authMiddleware, refresh }

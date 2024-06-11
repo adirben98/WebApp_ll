@@ -1,5 +1,6 @@
 import express, { Express } from "express";
 const app = express();
+import fileRoute from "./Routes/fileRouter";
 import recipeRouter from "./Routes/recipeRouter";
 import commentRouter from "./Routes/commentRouter";
 import authRouter from "./Routes/authRouter";
@@ -37,6 +38,7 @@ const init = () => {
       app.use(bodyParser.urlencoded({ extended: true }));
       app.use(bodyParser.json());
 
+
       app.use((req, res, next) => {
         res.header("Access-Control-Allow-Origin", "*");
         res.header("Access-Control-Allow-Headers","*");
@@ -44,12 +46,14 @@ const init = () => {
         
         next();
       })
-
       app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
+      app.use("/file", fileRoute);
       app.use("/auth", authRouter);
       app.use("/recipe", recipeRouter);
       app.use("/comment", commentRouter);
       app.use("/restApi",restApiRouter)
+      app.use('/public',express.static("public"))
+
 
       resolve(app);
     });

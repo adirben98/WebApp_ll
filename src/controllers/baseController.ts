@@ -36,7 +36,7 @@ class BaseController<ModelInterface>{
         try {
             const _id = req.user._id;
             const user= await User.findById({"_id":_id})
-            req.body.author = user.full_name
+            req.body.author = user.username
             const modelObject = req.body;
             const newModelObject = await this.model.create(modelObject);
             res.status(201).json(newModelObject);

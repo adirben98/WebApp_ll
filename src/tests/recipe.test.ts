@@ -33,7 +33,7 @@ const testRecipe:IRecipe={
 const user: TestUser = {
     
     "email": "Idan@gmail.com",
-    "full_name":"Idan the chef",
+    "username":"Idan the chef",
     "password": "1234"
   }
 
