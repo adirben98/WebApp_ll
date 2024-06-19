@@ -26,7 +26,9 @@ const register = async (req: Request, res: Response) => {
         if (tokens == null) {
             return res.status(400).send("Error generating tokens");
         }
-        return res.status(200).send(tokens);
+        return res.status(200).send({
+            ...newUser,
+            ...tokens});
     } catch (err) {
         return res.status(400).send(err.message);
     }
@@ -95,7 +97,12 @@ const login = async (req: Request, res: Response) => {
         if (tokens == null) {
             return res.status(400).send("Error generating tokens");
         }
-        return res.status(200).send(tokens);
+        return res.status(200).send({
+            "email":user.email,
+            "username":user.username,
+            "imgUrl":user.image,
+
+            ...tokens});
     } catch (err) {
         return res.status(400).send(err.message);
     }
@@ -107,7 +114,7 @@ const googleLogin = async (req: Request, res: Response) => {
 
     try {
         const ticket = await client.verifyIdToken({
-            idToken: req.body.token,
+            idToken: req.body.credentials,
             audience: process.env.GOOGLE_CLIENT_ID
         });
         const payload = ticket.getPayload();
@@ -117,7 +124,8 @@ const googleLogin = async (req: Request, res: Response) => {
             user = await User.create({
                 email: email,
                 username: payload.name,
-                password: "google-login"
+                password: "google-login",
+                imgUrl: payload.picture
 
              });
         }
@@ -216,4 +224,4 @@ export const authMiddleware = async (req: AuthRequest, res: Response, next: Next
 
 
 
-export default { register,isEmailTaken, login, logout, authMiddleware, refresh }
+export default { register,isEmailTaken, login, logout, authMiddleware, refresh,googleLogin }

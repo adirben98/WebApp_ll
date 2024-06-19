@@ -11,6 +11,7 @@ export interface IRecipe {
     name: string;
     author: string;
     category: string;
+    description: string;
     ingredients: string[];
     instructions: string;
     image: string;
@@ -23,9 +24,10 @@ const testRecipe:IRecipe={
     
     name:"mac&cheese",
     author:"IDAN",
-    category:"breakfast",
+    category:"Italian",
     ingredients:["cheese","salt","pasta","cream"],
     instructions:"cook pasta, cook cream with salt ,add all with cheese",
+    description:"nice dish to eat in the morning",
     image:"https://www.google.com/search?q=mac+and+cheese&rlz=1C1GCEU_enIL832IL832&source=lnms&tbm=isch&sa=X&ved=0ahUKEwiJ9J6V9JLzAhXQzIUKHbJzDZQQ_AUIBygC&biw=1366&bih=657#imgrc=5",
     likes:0,
     likedBy:[]
@@ -58,7 +60,8 @@ describe("Recipe Tests", () => {
         expect(res.statusCode).toEqual(201);
         expect(res.body.author).toEqual("Idan the chef")
         expect(res.body.name).toEqual("mac&cheese")
-        expect(res.body.category).toEqual("breakfast")
+        expect(res.body.category).toEqual("Italian")
+        expect(res.body.description).toEqual("nice dish to eat in the morning")
         expect(res.body.ingredients).toEqual(["cheese","salt","pasta","cream"])
         expect(res.body.instructions).toEqual("cook pasta, cook cream with salt ,add all with cheese")
         expect(res.body.image).toEqual("https://www.google.com/search?q=mac+and+cheese&rlz=1C1GCEU_enIL832IL832&source=lnms&tbm=isch&sa=X&ved=0ahUKEwiJ9J6V9JLzAhXQzIUKHbJzDZQQ_AUIBygC&biw=1366&bih=657#imgrc=5")
@@ -73,9 +76,10 @@ describe("Recipe Tests", () => {
         const res = await request(app).get("/recipe/"+testRecipe._id).set("Authorization", "Bearer " + user.accessToken).send();
         expect(res.statusCode).toEqual(200);
         expect(res.body.name).toEqual("mac&cheese")
-        expect(res.body.category).toEqual("breakfast")
+        expect(res.body.category).toEqual("Italian")
         expect(res.body.ingredients).toEqual(["cheese","salt","pasta","cream"])
         expect(res.body.instructions).toEqual("cook pasta, cook cream with salt ,add all with cheese")
+        expect(res.body.description).toEqual("nice dish to eat in the morning")
         expect(res.body.image).toEqual("https://www.google.com/search?q=mac+and+cheese&rlz=1C1GCEU_enIL832IL832&source=lnms&tbm=isch&sa=X&ved=0ahUKEwiJ9J6V9JLzAhXQzIUKHbJzDZQQ_AUIBygC&biw=1366&bih=657#imgrc=5")
         expect(res.body.likes).toEqual(0)
         expect(res.body.likedBy).toEqual([])
@@ -103,14 +107,16 @@ describe("Recipe Tests", () => {
     })
 
     test("Edit Recipe",async () => {
-        testRecipe.category="dinner"
         testRecipe.name="mac&cheese"
+        testRecipe.description="nice dish to eat in the evening"
+        testRecipe.category="American"
 
         const res = await request(app).put("/recipe/").set("Authorization", "Bearer " + user.accessToken).send(testRecipe);
         expect(res.statusCode).toEqual(200);
         expect(res.body._id).toEqual(testRecipe._id )
         expect(res.body.name).toEqual("mac&cheese")
-        expect(res.body.category).toEqual("dinner")
+        expect(res.body.category).toEqual("American")
+        expect(res.body.description).toEqual("nice dish to eat in the evening")
         expect(res.body.ingredients).toEqual(["cheese","salt","pasta","cream"])
         expect(res.body.instructions).toEqual("cook pasta, cook cream with salt ,add all with cheese")
 
@@ -126,7 +132,7 @@ describe("Recipe Tests", () => {
         const res2=await request(app).post("/recipe/"+testRecipe._id+"/like").set("Authorization", "Bearer " + user.accessToken).send()
         expect(res2.statusCode).toEqual(200);
         expect(res2.body.name).toEqual("mac&cheese")
-        expect(res2.body.category).toEqual("dinner")
+        expect(res2.body.category).toEqual("American")
         expect(res2.body.ingredients).toEqual(["cheese","salt","pasta","cream"])
         expect(res2.body.instructions).toEqual("cook pasta, cook cream with salt ,add all with cheese")
         expect(res2.body.likes).toEqual(likes+1)
@@ -146,7 +152,7 @@ describe("Recipe Tests", () => {
         const res2=await request(app).post("/recipe/"+testRecipe._id+"/unlike").set("Authorization", "Bearer " + user.accessToken).send()
         expect(res2.statusCode).toEqual(200);
         expect(res2.body.name).toEqual("mac&cheese")
-        expect(res2.body.category).toEqual("dinner")
+        expect(res2.body.category).toEqual("American")
         expect(res2.body.ingredients).toEqual(["cheese","salt","pasta","cream"])
         expect(res2.body.instructions).toEqual("cook pasta, cook cream with salt ,add all with cheese")
         expect(res2.body.likes).toEqual(likes-1)

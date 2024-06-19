@@ -131,6 +131,7 @@ authRouter.post("/isEmailTaken", authController.isEmailTaken);
 */
 
 authRouter.post("/login", authController.login);
+authRouter.post("/googleLogin", authController.googleLogin);
 
 /**
 * @swagger

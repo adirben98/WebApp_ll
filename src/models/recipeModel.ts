@@ -5,7 +5,9 @@ export interface IRecipe {
     _id: string;
     name: string;
     author: string;
+    authorImg:string;
     category: string;
+    description: string;
     ingredients: string[];
     instructions: string;
     createdAt:Date
@@ -26,6 +28,14 @@ const RecipeSchema = new mongoose.Schema<IRecipe>({
     category: {
         type: String,
         required: true,
+    },
+    description: {
+        type: String,
+        required: true,
+    },
+    authorImg:{
+        type:String,
+        required:false
     },
     ingredients: {
         type: [String],

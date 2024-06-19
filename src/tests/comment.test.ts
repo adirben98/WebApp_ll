@@ -31,6 +31,7 @@ const testRecipe:IRecipe={
     category:"breakfast",
     ingredients:["cheese","salt","pasta","cream"],
     instructions:"cook pasta, cook cream with salt ,add all with cheese",
+    description:"nice dish to eat in the morning",
     image:"https://www.google.com/search?q=mac+and+cheese&rlz=1C1GCEU_enIL832IL832&source=lnms&tbm=isch&sa=X&ved=0ahUKEwiJ9J6V9JLzAhXQzIUKHbJzDZQQ_AUIBygC&biw=1366&bih=657#imgrc=5",
     
 }

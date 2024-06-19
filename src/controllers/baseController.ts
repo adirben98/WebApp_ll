@@ -21,7 +21,7 @@ class BaseController<ModelInterface>{
 
                 else{
                 const modelObject = await this.model.find({"recipeId":req.params.recipeId});
-                return res.status(200).send(modelObject);
+                return res.status(200).send(modelObject.reverse());
                 }
             }
              

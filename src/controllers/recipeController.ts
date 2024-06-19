@@ -15,6 +15,19 @@ class recipeController extends BaseController<IRecipe>{
             res.status(400).send(error.message)
         }
     }
+    async isLiked(req: AuthRequest, res: Response){
+        try{
+            const recipe=await Recipe.findById(req.params.id)
+            if(recipe.likedBy.includes(req.user._id)){
+               return res.status(200).send(true)
+            }
+            return res.status(200).send(false)
+        }
+        catch(error){
+            res.status(400).send(error.message)
+        }
+    }
+
     async likeIncrement(req: AuthRequest, res: Response){
         try {
             const recipeId = req.params.id;
@@ -39,16 +52,11 @@ class recipeController extends BaseController<IRecipe>{
             const recipeId = req.params.id;
             const userId = req.user._id;
 
-            const recipe
-             = await Recipe.findById(recipeId)
-            if (recipe
-                .likedBy.includes(userId)){
-                recipe
-                .likes-=1
-                recipe
-                .likedBy.filter((id)=>id!==userId)
-                await recipe
-                .save()
+            const recipe= await Recipe.findById(recipeId)
+            if (recipe.likedBy.includes(userId)){
+                recipe.likes-=1
+                recipe.likedBy=recipe.likedBy.filter((id)=>id!==userId)
+                await recipe.save()
                 res.status(200).send(recipe)
             }
             else{

@@ -149,6 +149,33 @@ recipeRouter.get("/topFive",recipeController.getTopFive)
  *               $ref: '#/components/schemas/Recipe'
  */
 recipeRouter.get("/:id",authMiddleware,recipeController.get.bind(recipeController))
+//add swagger to isLiked
+/**
+ * @swagger
+ * /recipe/isLiked/{id}:
+ *   get:
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       - Recipe
+ *     summary: Check if the recipe is liked
+ *     description:  need to provide the access token in the auth header.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The recipe id to check
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: The recipe was successfully liked
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Recipe'
+ */
+recipeRouter.get("/isLiked/:id",authMiddleware,recipeController.isLiked.bind(recipeController))
 
 /**
  * @swagger
@@ -175,7 +202,7 @@ recipeRouter.get("/:id",authMiddleware,recipeController.get.bind(recipeControlle
  *             schema:
  *               $ref: '#/components/schemas/Recipe'
  */
-recipeRouter.post("/:id/like",authMiddleware,recipeController.likeIncrement.bind(recipeController))
+recipeRouter.post("/like/:id",authMiddleware,recipeController.likeIncrement.bind(recipeController))
 
 /**
  * @swagger
@@ -202,7 +229,7 @@ recipeRouter.post("/:id/like",authMiddleware,recipeController.likeIncrement.bind
  *             schema:
  *               $ref: '#/components/schemas/Recipe'
  */
-recipeRouter.post("/:id/unlike",authMiddleware,recipeController.likeDincrement.bind(recipeController))
+recipeRouter.post("/unlike/:id",authMiddleware,recipeController.likeDincrement.bind(recipeController))
 
 
 /**
