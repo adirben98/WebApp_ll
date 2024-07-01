@@ -51,11 +51,9 @@ const user1: TestUser = {
 beforeAll(async () => {
     app = await init();
     console.log("Before all");
-    await User.deleteMany({ email: user1.email });
-    await User.deleteMany({ email: user2.email });
-    await Recipe.deleteMany({ author:"Idan the chef"})
-    await Comment.deleteMany({ author:"Eliav the chef"})
-    await Comment.deleteMany({ author:"Idan the chef"})
+    await User.deleteMany({ });
+    await Recipe.deleteMany({ })
+    await Comment.deleteMany({ })
     await request(app).post("/auth/register").send(user1);
     await request(app).post("/auth/register").send(user2);
     const res1 = await request(app).post("/auth/login").send(user1);
@@ -92,14 +90,14 @@ afterAll(async () => {
   
     
     test("Get Comments By Recipe Id", async () => {
-        const res = await request(app).get("/comment/"+testRecipe._id).set("Authorization", "Bearer " + user1.accessToken).send();
+        const res = await request(app).get("/comment/"+testRecipe._id).set("Authorization", "Bearer " + user2.accessToken).send();
         expect(res.statusCode).toEqual(200);
-        expect(res.body[0].author).toEqual("Idan the chef")
-        expect(res.body[0].content).toEqual("that is a great recipe")
-        expect(res.body[0].recipeId).toEqual(testRecipe._id)
-        expect(res.body[1].author).toEqual("Eliav the chef")
-        expect(res.body[1].content).toEqual("that is a bad recipe")
+        expect(res.body[1].author).toEqual("Idan the chef")
+        expect(res.body[1].content).toEqual("that is a great recipe")
         expect(res.body[1].recipeId).toEqual(testRecipe._id)
+        expect(res.body[0].author).toEqual("Eliav the chef")
+        expect(res.body[0].content).toEqual("that is a bad recipe")
+        expect(res.body[0].recipeId).toEqual(testRecipe._id)
     })
 
     test("Edit Comment",async () => {

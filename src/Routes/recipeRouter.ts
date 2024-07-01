@@ -100,6 +100,14 @@ import getFiveRandomRecipe from "../controllers/restApi"
  *               $ref: '#/components/schemas/Recipe'
  */
 recipeRouter.post("/",authMiddleware,recipeController.post.bind(recipeController))
+//ToDo: add swagger to getCategories
+recipeRouter.get("/getCategories",authMiddleware,recipeController.getCategories)
+//ToDo: add swager
+recipeRouter.get("/getUserRecipes/:author",authMiddleware,recipeController.get.bind(recipeController))
+recipeRouter.get("/getUserFavoriteRecipes/:author",authMiddleware,recipeController.getUserFavorites.bind(recipeController))
+recipeRouter.get("/getUserRestAPIFavoriteRecipes/:author",authMiddleware,recipeController.getUserRestAPIFavorites.bind(recipeController))
+
+
 
 
 /**

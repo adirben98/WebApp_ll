@@ -5,6 +5,14 @@ import jwt from "jsonwebtoken";
 import { OAuth2Client } from "google-auth-library";
 import { Document } from "mongoose";
 
+const getUser= async(author:string)=>{
+    try{
+        const user=await User.findOne({"username":author});
+        return user;
+    }
+    catch(err){console.log(err)}
+}
+
 const register = async (req: Request, res: Response) => {
     const email = req.body.email;
     const password = req.body.password;
@@ -224,4 +232,4 @@ export const authMiddleware = async (req: AuthRequest, res: Response, next: Next
 
 
 
-export default { register,isEmailTaken, login, logout, authMiddleware, refresh,googleLogin }
+export default { register,isEmailTaken, login, logout, authMiddleware, refresh,googleLogin,getUser }

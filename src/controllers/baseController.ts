@@ -13,12 +13,15 @@ class BaseController<ModelInterface>{
 
     async get(req: Request, res: Response) {
         try {
-            if (req.params.id != null || req.params.recipeId != null) {
+            if (req.params.id != null || req.params.recipeId != null || req.params.author != null) {
                 if (req.params.id){
                 const modelObject = await this.model.findById(req.params.id);
                 return res.status(200).send(modelObject);
                 }
-
+                else if (req.params.author){
+                    const modelObject = await this.model.find({"author":req.params.author});
+                    return res.status(200).send(modelObject.reverse());
+                }
                 else{
                 const modelObject = await this.model.find({"recipeId":req.params.recipeId});
                 return res.status(200).send(modelObject.reverse());

@@ -43,8 +43,8 @@ let app: App;
 beforeAll(async () => {
   app = await init();
   console.log("Before all");
-  await User.deleteMany({ email: user.email });
-  await Recipe.deleteMany();
+  await User.deleteMany({  });
+  await Recipe.deleteMany({ });
   await request(app).post("/auth/register").send(user);
   const res = await request(app).post("/auth/login").send(user);
   user.accessToken = res.body.accessToken;
@@ -129,7 +129,7 @@ describe("Recipe Tests", () => {
         const res = await request(app).get("/recipe/"+testRecipe._id).set("Authorization", "Bearer " + user.accessToken).send()
         const likes=res.body.likes
     
-        const res2=await request(app).post("/recipe/"+testRecipe._id+"/like").set("Authorization", "Bearer " + user.accessToken).send()
+        const res2=await request(app).post("/recipe/like/"+testRecipe._id+"").set("Authorization", "Bearer " + user.accessToken).send()
         expect(res2.statusCode).toEqual(200);
         expect(res2.body.name).toEqual("mac&cheese")
         expect(res2.body.category).toEqual("American")
@@ -149,7 +149,7 @@ describe("Recipe Tests", () => {
         const res = await request(app).get("/recipe/"+testRecipe._id).set("Authorization", "Bearer " + user.accessToken).send()
         const likes=res.body.likes
     
-        const res2=await request(app).post("/recipe/"+testRecipe._id+"/unlike").set("Authorization", "Bearer " + user.accessToken).send()
+        const res2=await request(app).post("/recipe/unlike/"+testRecipe._id+"").set("Authorization", "Bearer " + user.accessToken).send()
         expect(res2.statusCode).toEqual(200);
         expect(res2.body.name).toEqual("mac&cheese")
         expect(res2.body.category).toEqual("American")

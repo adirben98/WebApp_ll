@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 
 export interface IRecipe {
-    _id: string;
+    _id?: string;
     name: string;
     author: string;
     authorImg:string;

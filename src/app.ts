@@ -11,6 +11,7 @@ import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUI from "swagger-ui-express";
+import cors from "cors";
 
 
 const init = () => {
@@ -39,13 +40,14 @@ const init = () => {
       app.use(bodyParser.json());
 
 
-      app.use((req, res, next) => {
-        res.header("Access-Control-Allow-Origin", "*");
-        res.header("Access-Control-Allow-Headers","*");
-        res.header("Access-Control-Allow-Methods","*");
+      // app.use((req, res, next) => {
+      //   res.header("Access-Control-Allow-Origin", "*");
+      //   res.header("Access-Control-Allow-Headers","*");
+      //   res.header("Access-Control-Allow-Methods","*");
         
-        next();
-      })
+      //   next();
+      // })
+      app.use(cors());
       app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
       app.use("/file", fileRoute);
       app.use("/auth", authRouter);
