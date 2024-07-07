@@ -103,9 +103,7 @@ recipeRouter.post("/",authMiddleware,recipeController.post.bind(recipeController
 //ToDo: add swagger to getCategories
 recipeRouter.get("/getCategories",authMiddleware,recipeController.getCategories)
 //ToDo: add swager
-recipeRouter.get("/getUserRecipes/:author",authMiddleware,recipeController.get.bind(recipeController))
-recipeRouter.get("/getUserFavoriteRecipes/:author",authMiddleware,recipeController.getUserFavorites.bind(recipeController))
-recipeRouter.get("/getUserRestAPIFavoriteRecipes/:author",authMiddleware,recipeController.getUserRestAPIFavorites.bind(recipeController))
+recipeRouter.get("/getUserRecipesAndFavorites",authMiddleware,recipeController.getUserRecipesAndFavorites.bind(recipeController))
 
 
 
@@ -237,7 +235,7 @@ recipeRouter.post("/like/:id",authMiddleware,recipeController.likeIncrement.bind
  *             schema:
  *               $ref: '#/components/schemas/Recipe'
  */
-recipeRouter.post("/unlike/:id",authMiddleware,recipeController.likeDincrement.bind(recipeController))
+recipeRouter.post("/unlike/:id",authMiddleware,recipeController.likeDecrement.bind(recipeController))
 
 
 /**

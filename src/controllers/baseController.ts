@@ -1,7 +1,7 @@
 import { Request,Response } from "express";
 import mongoose from "mongoose";
 import { AuthRequest } from "./authController";
-import User from "../models/userModel";
+import User, { IUser } from "../models/userModel";
 
 
 class BaseController<ModelInterface>{
@@ -11,20 +11,25 @@ class BaseController<ModelInterface>{
         this.model = model;
     }
 
-    async get(req: Request, res: Response) {
+    async get(req: AuthRequest, res: Response) {
         try {
-            if (req.params.id != null || req.params.recipeId != null || req.params.author != null) {
+            let user:IUser;
+            if(req.user){
+                user= await User.findById({"_id":req.user._id})
+            }
+            if (req.params.id != null || req.params.recipeId != null || user!= null) {
                 if (req.params.id){
                 const modelObject = await this.model.findById(req.params.id);
                 return res.status(200).send(modelObject);
                 }
-                else if (req.params.author){
-                    const modelObject = await this.model.find({"author":req.params.author});
-                    return res.status(200).send(modelObject.reverse());
+                else if (req.params.recipeId){
+                    const modelObject = await this.model.find({"recipeId":req.params.recipeId});
+                return res.status(200).send(modelObject.reverse());
+                    
                 }
                 else{
-                const modelObject = await this.model.find({"recipeId":req.params.recipeId});
-                return res.status(200).send(modelObject.reverse());
+                    const modelObject = await this.model.find({"author":user.username});
+                    return res.status(200).send(modelObject.reverse());
                 }
             }
              

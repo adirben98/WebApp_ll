@@ -3,7 +3,7 @@ import Recipe, { IRecipe } from "../models/recipeModel";
 import { Response } from "express";
 import { AuthRequest } from "./authController";
 import axios from "axios";
-import User from "../controllers/authController";
+import User from "../models/userModel";
 
 class recipeController extends BaseController<IRecipe> {
   constructor() {
@@ -47,11 +47,14 @@ class recipeController extends BaseController<IRecipe> {
     try {
       const recipeId = req.params.id;
       const userId = req.user._id;
+      const user=await User.findById(userId)
 
       const recipe = await Recipe.findById(recipeId);
       if (recipe.likedBy.includes(userId)) {
         res.status(400).send("You have already liked this recipe");
       } else {
+        user.favorites.push(recipeId)
+        await user.save()
         recipe.likes += 1;
         recipe.likedBy.push(userId);
         await recipe.save();
@@ -61,13 +64,16 @@ class recipeController extends BaseController<IRecipe> {
       res.status(400).send(error.message);
     }
   }
-  async likeDincrement(req: AuthRequest, res: Response) {
+  async likeDecrement(req: AuthRequest, res: Response) {
     try {
       const recipeId = req.params.id;
       const userId = req.user._id;
+      const user=await User.findById(userId)
 
       const recipe = await Recipe.findById(recipeId);
       if (recipe.likedBy.includes(userId)) {
+        user.favorites=user.favorites.filter((id)=>id!==recipeId)
+        await user.save()
         recipe.likes -= 1;
         recipe.likedBy = recipe.likedBy.filter((id) => id !== userId);
         await recipe.save();
@@ -79,34 +85,23 @@ class recipeController extends BaseController<IRecipe> {
       res.status(400).send(error.message);
     }
   }
-  async getUserFavorites(req: AuthRequest, res: Response) {
+  async getUserRecipesAndFavorites(req: AuthRequest, res: Response) {
     try {
-      const user = await User.getUser(req.params.author);
-      const favorites = user.favorites;
-      let arr = [];
-      for (let i = 0; i < favorites.length; i++) {
-        const recipe = await Recipe.findById(favorites[i]);
-        arr.push(recipe);
+      const user = await User.findById(req.user._id);
+      const userFavorites = user.favorites;
+      let favorites = [];
+      for (let i = 0; i < userFavorites.length; i++) {
+        const recipe = await Recipe.findById(userFavorites[i]);
+        favorites.push(recipe);
       }
-        res.status(200).send(arr);
+      const userRecipes = await Recipe.find({ author: user.username });
+        return res.status(200).send({
+          recipes: userRecipes,
+          favorites: favorites,
+        });
     } catch (err) {
       res.status(400).send(err.message);
     }
-  }
-  async getUserRestAPIFavorites(req: AuthRequest, res: Response) {
-
-    try {
-        const user = await User.getUser(req.params.author);
-        const favorites = user.favoritesFromAPI;
-        let arr = [];
-        for (let i = 0; i < favorites.length; i++) {
-          const recipe = await Recipe.findById(favorites[i]);
-          arr.push(recipe);
-        }
-          res.status(200).send(arr);
-      } catch (err) {
-        res.status(400).send(err.message);
-      }
   }
 }
 

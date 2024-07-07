@@ -1,6 +1,6 @@
 import express from "express";
 const authRouter = express.Router();
-import authController from "../controllers/authController";
+import authController, { authMiddleware } from "../controllers/authController";
 import { auth } from "google-auth-library";
 
 /**
@@ -132,8 +132,10 @@ authRouter.post("/isEmailTaken", authController.isEmailTaken);
 
 authRouter.post("/login", authController.login);
 authRouter.post("/googleLogin", authController.googleLogin);
+authRouter.post("/checkToken",authController.checkToken)
+authRouter.put("/updateUserImg",authController.updateUserImg)
 
-/**
+/** 
 * @swagger
 * /auth/refresh:
 *   get:
@@ -170,5 +172,6 @@ authRouter.get("/refresh", authController.refresh);
 
 
 authRouter.get("/logout", authController.logout);
+authRouter.put("/changePassword",authMiddleware,authController.changePassword)
 
 export default authRouter;

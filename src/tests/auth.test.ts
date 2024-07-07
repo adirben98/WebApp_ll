@@ -46,7 +46,7 @@ afterAll(async () => {
 describe("Register Tests", () => {
   test("Register", async () => {
     const res = await request(app).post("/auth/register").send(user);
-    expect(res.statusCode).toEqual(200);
+    expect(res.statusCode).toEqual(201);
   });
 
   test("Login", async () => {

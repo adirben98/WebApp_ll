@@ -19,9 +19,15 @@ const getOneRandomRecipe = async () => {
 const getFiveRandomRecipe= async (req:Request,res:Response)=>{
 
     const recipes = []
-    for (let i = 0; i < 5; i++){
-        recipes.push(await getOneRandomRecipe())
+    while (recipes.length<5){
+        const recipe=await getOneRandomRecipe()
+        if (!recipes.includes(recipe)) {
+            recipes.push()
+        }
+
     }
+        
+     
     res.status(200).send(recipes)
 }
 
