@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-
+//go daddy
 export interface IComment {
     _id: string;
     author: string;
