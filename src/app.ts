@@ -1,5 +1,7 @@
 import express, { Express } from "express";
 const app = express();
+import http from "http";
+const server = http.createServer(app);
 import fileRoute from "./Routes/fileRouter";
 import recipeRouter from "./Routes/recipeRouter";
 import commentRouter from "./Routes/commentRouter";
@@ -15,7 +17,7 @@ import cors from "cors";
 
 
 const init = () => {
-  const promise = new Promise<Express>((resolve) => {
+  const promise = new Promise<http.Server>((resolve) => {
     const db = mongoose.connection;
     db.on("error", (error) => console.error(error));
     db.once("open", () => console.log("connected to database"));
@@ -57,7 +59,7 @@ const init = () => {
       app.use('/public',express.static("public"))
 
 
-      resolve(app);
+      resolve(server);
     });
   });
   return promise;
