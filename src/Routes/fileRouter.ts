@@ -18,4 +18,31 @@ const upload = multer({ storage: storage });
 router.post('/', upload.single("file"), function (req, res) {
  res.status(200).send({ url: base + req.file.path })
 });
+/**
+ * @swagger
+ * /file:
+ *   post:
+ *     summary: Upload a file
+ *     description: Upload a file
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200:
+ *         description: File uploaded
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 url:
+ *                   type: string
+ */
 export default router;

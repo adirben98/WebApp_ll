@@ -16,9 +16,13 @@ const register = async (req: Request, res: Response) => {
     return res.status(400).send("Email and password are required");
   }
   try {
-    const user = await User.findOne({ email: email });
+    let user = await User.findOne({ email: email });
     if (user) {
       return res.status(409).send("User already exists");
+    }
+    user=await User.findOne({username:username})
+    if (user) {
+      return res.status(408).send("User already exists");
     }
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
@@ -42,7 +46,24 @@ const register = async (req: Request, res: Response) => {
   } catch (err) {
     return res.status(400).send(err.message);
   }
-};
+}
+const isUsernameTaken=async(req: Request, res: Response)=>{
+  const username = req.body.username;
+  if (username === undefined) {
+    return res.status(400).send("Username is required");
+  }
+  try {
+    const user = await User.findOne({ username: username });
+    if (user) {
+      return res.status(400).send("Username already exists");
+    } else {
+      return res.status(200).send("Username is available");
+    }}
+    catch (err) {
+      return res.status(400).send(err.message);
+
+    }
+}
 const isEmailTaken = async (req: Request, res: Response) => {
   const email = req.body.email;
   if (email === undefined) {
@@ -144,7 +165,12 @@ const googleLogin = async (req: Request, res: Response) => {
       });
     }
     const tokens = await generateTokens(user);
-    res.status(200).send(tokens);
+    res.status(200).send({
+      email: user.email,
+      username: user.username,
+      imgUrl: user.image,
+      ...tokens
+    });
   } catch (err) {
     return res.status(400).send(err.message);
   }
@@ -311,5 +337,6 @@ export default {
   googleLogin,
   changePassword,
   checkToken,
-  updateUserImg
+  updateUserImg,
+  isUsernameTaken
 }

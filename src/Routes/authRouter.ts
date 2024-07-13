@@ -134,6 +134,7 @@ authRouter.post("/login", authController.login);
 authRouter.post("/googleLogin", authController.googleLogin);
 authRouter.post("/checkToken",authController.checkToken)
 authRouter.put("/updateUserImg",authController.updateUserImg)
+authRouter.post("/isUsernameTaken",authController.isUsernameTaken)
 
 /** 
 * @swagger
