@@ -11,7 +11,8 @@
     "testFile": "tsc && jest --detectOpenHandles --forceExit ./src/tests/file.test.ts",
     "testAuth": "tsc && jest --detectOpenHandles --forceExit ./src/tests/auth.test.ts",
     "testRecipe": "tsc && jest --detectOpenHandles --forceExit ./src/tests/recipe.test.ts",
-    "testComment": "tsc && jest --detectOpenHandles --forceExit ./src/tests/comment.test.ts"
+    "testComment": "tsc && jest --detectOpenHandles --forceExit ./src/tests/comment.test.ts",
+    "testSocket": "tsc && jest --detectOpenHandles --forceExit ./src/tests/socket.test.ts"
   },
   "author": "",
   "license": "ISC",
@@ -28,7 +29,9 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.3.2",
     "morgan": "^1.10.0",
-    "multer": "^1.4.5-lts.1"
+    "multer": "^1.4.5-lts.1",
+    "socket.io": "^4.7.5",
+    "socket.io-client": "^4.7.5"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
