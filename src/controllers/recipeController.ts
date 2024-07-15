@@ -103,6 +103,24 @@ class recipeController extends BaseController<IRecipe> {
       res.status(400).send(err.message);
     }
   }
+  async search(req: AuthRequest, res: Response) {
+    const query = req.query.q;
+    try {
+      const results = await Recipe.find({ name: { $regex: query, $options: 'i' } });
+      res.status(200).send(results);
+    } catch (err) {
+      res.status(500).json({ message: 'Error performing search', error: err });
+    }
+  }
+  async categorySearch(req: AuthRequest, res: Response) {
+    const category = req.query.category;
+    try {
+      const results = await Recipe.find({ category: category });
+      res.status(200).send(results);
+    } catch (err) {
+      res.status(500).json({ message: 'Error performing search', error: err });
+    }
+  }
 }
 
 export default new recipeController();

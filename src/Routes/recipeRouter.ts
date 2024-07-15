@@ -105,6 +105,9 @@ recipeRouter.get("/getCategories",authMiddleware,recipeController.getCategories)
 //ToDo: add swager
 recipeRouter.get("/getUserRecipesAndFavorites",authMiddleware,recipeController.getUserRecipesAndFavorites.bind(recipeController))
 
+recipeRouter.get("/search",authMiddleware,recipeController.search.bind(recipeController))
+recipeRouter.get("/categorySearch/:name",authMiddleware,recipeController.categorySearch.bind(recipeController))
+
 
 
 
