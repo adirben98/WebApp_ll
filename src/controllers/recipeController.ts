@@ -39,6 +39,7 @@ class recipeController extends BaseController<IRecipe> {
       }
       return res.status(200).send(false);
     } catch (error) {
+      console.log(error);
       res.status(400).send(error.message);
     }
   }
@@ -95,6 +96,7 @@ class recipeController extends BaseController<IRecipe> {
         favorites.push(recipe);
       }
       const userRecipes = await Recipe.find({ author: user.username });
+      
         return res.status(200).send({
           recipes: userRecipes,
           favorites: favorites,
@@ -113,7 +115,7 @@ class recipeController extends BaseController<IRecipe> {
     }
   }
   async categorySearch(req: AuthRequest, res: Response) {
-    const category = req.query.category;
+    const category = req.params.name;
     try {
       const results = await Recipe.find({ category: category });
       res.status(200).send(results);

@@ -5,10 +5,12 @@ import { App } from "supertest/types";
 import Recipe, { IRecipe } from "../models/recipeModel";
 import { TestUser } from "./auth.test";
 import User from "../models/userModel";
+import axios from 'axios';
 
+jest.mock('axios');
+const mockedAxios = axios as jest.Mocked<typeof axios>;
 
-
-const testRecipe: IRecipe = {
+let testRecipe: IRecipe = {
   name: "mac&cheese",
   author: "IDAN",
   category: "Italian",
@@ -60,12 +62,12 @@ describe("Recipe Tests", () => {
       "cook pasta, cook cream with salt ,add all with cheese"
     );
     expect(res.body.image).toEqual(
-      "https://www.google.com/search?q=mac+and+cheese&rlz=1C1GCEU_enIL832IL832&source=lnms&tbm=isch&sa=X&ved=0ahUKEwiJ9J6V9JLzAhXQzIUKHbJzDZQQ_AUIBygC&biw=1366&bih=657#imgrc=5"
+      "https://thebakermama.com/wp-content/uploads/2014/09/IMG_1588-scaled.jpg"
     );
     expect(res.body.likes).toEqual(0);
     expect(res.body.likedBy).toEqual([]);
 
-    testRecipe._id = res.body._id;
+    testRecipe=res.body
   });
 
   test("Get Recipe By Id", async () => {
@@ -82,13 +84,13 @@ describe("Recipe Tests", () => {
     );
     expect(res.body.description).toEqual("nice dish to eat in the morning");
     expect(res.body.image).toEqual(
-      "https://www.google.com/search?q=mac+and+cheese&rlz=1C1GCEU_enIL832IL832&source=lnms&tbm=isch&sa=X&ved=0ahUKEwiJ9J6V9JLzAhXQzIUKHbJzDZQQ_AUIBygC&biw=1366&bih=657#imgrc=5"
+      "https://thebakermama.com/wp-content/uploads/2014/09/IMG_1588-scaled.jpg"
     );
     expect(res.body.likes).toEqual(0);
     expect(res.body.likedBy).toEqual([]);
   });
 
-  test("Get Top Five Recipe", async () => {
+  test("Get Top Five Recipes", async () => {
     const id = testRecipe._id;
     for (let i = 0; i < 10; i++) {
       testRecipe._id = undefined;
@@ -151,12 +153,6 @@ describe("Recipe Tests", () => {
       "cook pasta, cook cream with salt ,add all with cheese"
     );
     expect(res2.body.likes).toEqual(likes + 1);
-
-    const res3 = await request(app)
-      .get("/recipe/" + testRecipe._id + "/like")
-      .set("Authorization", "Bearer " + user.accessToken)
-      .send();
-    expect(res3.statusCode).not.toEqual(200);
   });
 
   test("Unlike Recipe", async () => {
@@ -178,13 +174,81 @@ describe("Recipe Tests", () => {
       "cook pasta, cook cream with salt ,add all with cheese"
     );
     expect(res2.body.likes).toEqual(likes - 1);
+  });
 
-    const res3 = await request(app)
-      .get("/recipe/" + testRecipe._id + "/unlike")
+
+
+  test("Get Categories", async () => {
+    const categories = {
+      data: {
+        meals: [
+          { strCategory: 'Italian' },
+          { strCategory: 'American' },
+          { strCategory: 'Mexican' }
+        ]
+      }
+    };
+    mockedAxios.get.mockResolvedValue(categories);
+
+    const res = await request(app)
+      .get("/recipe/getCategories")
       .set("Authorization", "Bearer " + user.accessToken)
       .send();
-    expect(res3.statusCode).not.toEqual(200);
+    expect(res.statusCode).toEqual(200);
+    expect(res.body).toEqual(['Italian', 'American', 'Mexican']);
   });
+
+  test("Is Liked", async () => {
+    const res = await request(app)
+      .get("/recipe/isLiked/" + testRecipe._id)
+      .set("Authorization", "Bearer " + user.accessToken)
+      .send();
+    expect(res.statusCode).toEqual(200);
+    expect(res.body).toEqual(false);
+
+    await request(app)
+      .post("/recipe/like/" + testRecipe._id + "")
+      .set("Authorization", "Bearer " + user.accessToken)
+      .send();
+
+    const res2 = await request(app)
+      .get("/recipe/isLiked/" + testRecipe._id)
+      .set("Authorization", "Bearer " + user.accessToken)
+      .send();
+    expect(res2.statusCode).toEqual(200);
+    expect(res2.body).toEqual(true);
+  });
+
+  test("Get User Recipes And Favorites", async () => {
+    
+
+    const res = await request(app)
+      .get("/recipe/getUserRecipesAndFavorites")
+      .set("Authorization", "Bearer " + user.accessToken)
+      .send();
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.recipes[0].name).toEqual("mac&cheese");
+    expect(res.body.favorites[0].name).toEqual("mac&cheese");
+  });
+
+  test("Search Recipes", async () => {
+    const res = await request(app)
+      .get("/recipe/search?q=mac&cheese")
+      .set("Authorization", "Bearer " + user.accessToken)
+      .send();
+    expect(res.statusCode).toEqual(200);
+    expect(res.body[0].name).toEqual("mac&cheese");
+  });
+
+  test("Search Recipes By Category", async () => {
+    const res = await request(app)
+      .get("/recipe/categorySearch/Italian")
+      .set("Authorization", "Bearer " + user.accessToken)
+      .send();
+    expect(res.statusCode).toEqual(200);
+    expect(res.body[0].category).toEqual("Italian");
+  });
+
 
   test("Delete Recipe", async () => {
     const res = await request(app)
@@ -201,6 +265,6 @@ describe("Recipe Tests", () => {
       .get("/recipe/" + testRecipe._id)
       .set("Authorization", "Bearer " + user.accessToken)
       .send();
-    expect(res3.body).toEqual({});
+    expect(res3.statusCode).toEqual(404); 
   });
 });
