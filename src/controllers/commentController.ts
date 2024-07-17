@@ -1,12 +1,13 @@
 import BaseController from "./baseController";
 import Comment,{IComment} from "../models/commentModel"
-import { Request, Response } from "express";
+import {  Response } from "express";
+import { AuthRequest } from "./authController";
 
 class commentController extends BaseController<IComment>{
     constructor(){
         super(Comment)
     }
-    async edit(req: Request, res: Response) {
+    async edit(req: AuthRequest, res: Response) {
         req.body.edited=true
         super.edit(req,res)
         

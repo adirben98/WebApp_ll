@@ -39,6 +39,7 @@ class recipeController extends BaseController<IRecipe> {
       }
       return res.status(200).send(false);
     } catch (error) {
+      console.log(error);
       res.status(400).send(error.message);
     }
   }
@@ -87,7 +88,7 @@ class recipeController extends BaseController<IRecipe> {
   }
   async getUserRecipesAndFavorites(req: AuthRequest, res: Response) {
     try {
-      const user = await User.findById(req.user._id);
+      const user = await User.findOne({username:req.params.name});
       const userFavorites = user.favorites;
       let favorites = [];
       for (let i = 0; i < userFavorites.length; i++) {
@@ -95,12 +96,31 @@ class recipeController extends BaseController<IRecipe> {
         favorites.push(recipe);
       }
       const userRecipes = await Recipe.find({ author: user.username });
+
         return res.status(200).send({
           recipes: userRecipes,
           favorites: favorites,
         });
     } catch (err) {
       res.status(400).send(err.message);
+    }
+  }
+  async search(req: AuthRequest, res: Response) {
+    const query = req.query.q;
+    try {
+      const results = await Recipe.find({ name: { $regex: query, $options: 'i' } });
+      res.status(200).send(results);
+    } catch (err) {
+      res.status(500).json({ message: 'Error performing search', error: err });
+    }
+  }
+  async categorySearch(req: AuthRequest, res: Response) {
+    const category = req.params.name;
+    try {
+      const results = await Recipe.find({ category: category });
+      res.status(200).send(results);
+    } catch (err) {
+      res.status(500).json({ message: 'Error performing search', error: err });
     }
   }
 }

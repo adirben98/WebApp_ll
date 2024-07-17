@@ -6,12 +6,20 @@ import { OAuth2Client } from "google-auth-library";
 import { Document } from "mongoose";
 
 
+const getUser=async (req: Request, res: Response) => {
+  const username=req.params.name
+  const user=await User.findOne({username:username})
+  if(user){
+    return res.status(200).send(user)
+  }
+  return res.status(404).send("User not found")
 
+}
 const register = async (req: Request, res: Response) => {
   const email = req.body.email;
   const password = req.body.password;
   const username = req.body.username;
-  const imgUrl = req.body.imgUrl;
+  const imgUrl = req.body.userImg;
   if (email === undefined || password === undefined) {
     return res.status(400).send("Email and password are required");
   }
@@ -138,7 +146,6 @@ const login = async (req: Request, res: Response) => {
       email: user.email,
       username: user.username,
       imgUrl: user.image,
-      password: password,
       ...tokens,
     });
   } catch (err) {
@@ -338,5 +345,6 @@ export default {
   changePassword,
   checkToken,
   updateUserImg,
-  isUsernameTaken
+  isUsernameTaken,
+  getUser
 }
