@@ -5,8 +5,7 @@ import { App } from "supertest/types";
 import Comment from "../models/commentModel";
 import {TestUser} from "./auth.test"
 import User from "../models/userModel"
-import Recipe from "../models/recipeModel"
-import {IRecipe} from "./recipe.test"
+import Recipe,{IRecipe}  from "../models/recipeModel"
 
 interface TestComment {
     _id?: string;
@@ -33,7 +32,10 @@ const testRecipe:IRecipe={
     instructions:"cook pasta, cook cream with salt ,add all with cheese",
     description:"nice dish to eat in the morning",
     image:"https://www.google.com/search?q=mac+and+cheese&rlz=1C1GCEU_enIL832IL832&source=lnms&tbm=isch&sa=X&ved=0ahUKEwiJ9J6V9JLzAhXQzIUKHbJzDZQQ_AUIBygC&biw=1366&bih=657#imgrc=5",
-    
+    authorImg:"https://cdn4.iconfinder.com/data/icons/avatars-xmas-giveaway/128/batman_hero_avatar_comics-512.png",
+    createdAt:new Date()
+    ,likedBy:[],
+    likes:0
 }
 const user1: TestUser = {
     
