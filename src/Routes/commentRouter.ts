@@ -1,15 +1,14 @@
-import express from "express"
+import express from "express";
 const commentRouter = express.Router();
-import commentController from "../controllers/commentController"
-import {authMiddleware} from "../controllers/authController"
+import commentController from "../controllers/commentController";
+import { authMiddleware } from "../controllers/authController";
 
 /**
-* @swagger
-* tags:
-*   name: Comment
-*   description: The Comment API
-*/
-/**
+ * @swagger
+ * tags:
+ *   name: Comment
+ *   description: The Comment API
+ */
 /**
  * @swagger
  * components:
@@ -35,11 +34,10 @@ import {authMiddleware} from "../controllers/authController"
  *           description: The comment creation date
  *       example:
  *         content: "that is a great recipe"
- *         recipeId: "123124143"
- *    
- *         
+ *         author: "User123"
+ *         recipeid: "123124143"
+ *         createdAt: "2023-07-15T19:20:30Z"
  */
-
 
 /**
  * @swagger
@@ -63,9 +61,11 @@ import {authMiddleware} from "../controllers/authController"
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Comment'
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Comment'
  */
-commentRouter.get("/:recipeId",authMiddleware,commentController.get.bind(commentController))     
+commentRouter.get("/:recipeId", authMiddleware, commentController.get.bind(commentController));
 
 /**
  * @swagger
@@ -75,16 +75,13 @@ commentRouter.get("/:recipeId",authMiddleware,commentController.get.bind(comment
  *     description: Need to provide the access token in the auth header. Also, provide the recipe id you comment for.
  *     tags: [Comment]
  *     security:
- *      - bearerAuth: []
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             $ref: '#/components/schemas/Comment'
- *     example:
- *       content: "that is a great recipe"
- *       recipeId: "123124143"
  *     responses:
  *       201:
  *         description: The comment was successfully created
@@ -92,9 +89,8 @@ commentRouter.get("/:recipeId",authMiddleware,commentController.get.bind(comment
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Comment'
- 
  */
-commentRouter.post("/",authMiddleware,commentController.post.bind(commentController))
+commentRouter.post("/", authMiddleware, commentController.post.bind(commentController));
 
 /**
  * @swagger
@@ -116,7 +112,6 @@ commentRouter.post("/",authMiddleware,commentController.post.bind(commentControl
  *               value:
  *                 _id: "123124143"
  *                 content: "just edited my comment"
- *
  *     responses:
  *       200:
  *         description: The comment was successfully edited
@@ -125,8 +120,7 @@ commentRouter.post("/",authMiddleware,commentController.post.bind(commentControl
  *             schema:
  *               $ref: '#/components/schemas/Comment'
  */
-
-commentRouter.put("/",authMiddleware,commentController.edit.bind(commentController))
+commentRouter.put("/", authMiddleware, commentController.edit.bind(commentController));
 
 /**
  * @swagger
@@ -136,26 +130,18 @@ commentRouter.put("/",authMiddleware,commentController.edit.bind(commentControll
  *     description: Need to provide the access token in the auth header.
  *     tags: [Comment]
  *     security:
- *     - bearerAuth: []
+ *       - bearerAuth: []
  *     parameters:
- *      - in: path
- *        name: id
- *        required: true
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The comment id
  *     responses:
  *       200:
  *         description: The comment was successfully deleted!
  */
-commentRouter.delete("/:id",authMiddleware,commentController.delete.bind(commentController))
-
-
-
-
-
-
-
-
-
-
-
+commentRouter.delete("/:id", authMiddleware, commentController.delete.bind(commentController));
 
 export default commentRouter;

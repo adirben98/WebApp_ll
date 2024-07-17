@@ -88,7 +88,7 @@ class recipeController extends BaseController<IRecipe> {
   }
   async getUserRecipesAndFavorites(req: AuthRequest, res: Response) {
     try {
-      const user = await User.findById(req.user._id);
+      const user = await User.findOne({username:req.params.name});
       const userFavorites = user.favorites;
       let favorites = [];
       for (let i = 0; i < userFavorites.length; i++) {
@@ -96,7 +96,7 @@ class recipeController extends BaseController<IRecipe> {
         favorites.push(recipe);
       }
       const userRecipes = await Recipe.find({ author: user.username });
-      
+
         return res.status(200).send({
           recipes: userRecipes,
           favorites: favorites,

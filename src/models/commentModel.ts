@@ -1,13 +1,11 @@
 import mongoose from "mongoose";
-//go daddy
-
-// IComment
+import moment from "moment";
 export interface IComment {
     _id: string;
     author: string;
     content: string;
     recipeId: string;
-    createdAt: Date;
+    createdAt: string;
     edited: boolean;
 }
 
@@ -26,8 +24,8 @@ const commentSchema=new mongoose.Schema<IComment>({
         required:true
     },
     createdAt:{
-        type:Date,
-        default:Date.now
+        type:String,
+        default:moment().format('MMMM Do YYYY, h:mm:ss a')
     },
     edited:{
         type:Boolean,

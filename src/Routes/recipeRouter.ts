@@ -1,17 +1,14 @@
-import express from "express"
+import express from "express";
 const recipeRouter = express.Router();
-import recipeController from "../controllers/recipeController"
-import {authMiddleware} from "../controllers/authController"
-import getFiveRandomRecipe from "../controllers/restApi"
-
+import recipeController from "../controllers/recipeController";
+import { authMiddleware } from "../controllers/authController";
 
 /**
-* @swagger
-* tags:
-*   name: Recipe
-*   description: The Recipe API
-*/
-/**
+ * @swagger
+ * tags:
+ *   name: Recipe
+ *   description: The Recipe API
+ */
 /**
  * @swagger
  * components:
@@ -57,23 +54,25 @@ import getFiveRandomRecipe from "../controllers/restApi"
  *             type: string
  *           description: Users who liked the recipe
  *       example:
- *         name: "mac&cheese"
- *         author: "IDAN"
- *         category: "breakfast"
+ *         name: "Spaghetti Carbonara"
+ *         author: "John Doe"
+ *         category: "Italian"
  *         ingredients:
- *           - "cheese"
- *           - "salt"
- *           - "pasta"
- *           - "cream"
+ *           - "spaghetti"
+ *           - "eggs"
+ *           - "pancetta"
+ *           - "parmesan cheese"
+ *           - "black pepper"
  *         instructions:
- *           - "cook pasta"
- *           - "cook cream with salt"
- *           - "add all with cheese"
- *         image: "https://example.com/mac-and-cheese.jpg"
- *         likes: 0
- *         likedBy: []
+ *           - "Cook spaghetti according to package instructions."
+ *           - "In a separate pan, cook pancetta until crispy."
+ *           - "Whisk eggs and Parmesan together in a bowl."
+ *           - "Combine spaghetti, pancetta, and egg mixture."
+ *           - "Season with black pepper and serve."
+ *         image: "https://example.com/spaghetti-carbonara.jpg"
+ *         likes: 5
+ *         likedBy: ["user1", "user2"]
  */
-
 
 /**
  * @swagger
@@ -84,7 +83,7 @@ import getFiveRandomRecipe from "../controllers/restApi"
  *     tags:
  *       - Recipe
  *     summary: Create a new Recipe
- *     description:  need to provide the access token in the auth header.
+ *     description: Need to provide the access token in the auth header.
  *     requestBody:
  *       required: true
  *       content:
@@ -92,24 +91,132 @@ import getFiveRandomRecipe from "../controllers/restApi"
  *           schema:
  *             $ref: '#/components/schemas/Recipe'
  *     responses:
- *       200:
+ *       201:
  *         description: The recipe was successfully created
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Recipe'
+ *       400:
+ *         description: Invalid input
  */
-recipeRouter.post("/",authMiddleware,recipeController.post.bind(recipeController))
-//ToDo: add swagger to getCategories
-recipeRouter.get("/getCategories",authMiddleware,recipeController.getCategories)
-//ToDo: add swager
-recipeRouter.get("/getUserRecipesAndFavorites",authMiddleware,recipeController.getUserRecipesAndFavorites.bind(recipeController))
+recipeRouter.post("/", authMiddleware, recipeController.post.bind(recipeController));
 
-recipeRouter.get("/search",authMiddleware,recipeController.search.bind(recipeController))
-recipeRouter.get("/categorySearch/:name",authMiddleware,recipeController.categorySearch.bind(recipeController))
+/**
+ * @swagger
+ * /recipe/getCategories:
+ *   get:
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       - Recipe
+ *     summary: Get all recipe categories
+ *     description: Retrieve a list of all recipe categories.
+ *     responses:
+ *       200:
+ *         description: A list of categories
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: string
+ *       400:
+ *         description: Failed to fetch categories
+ */
+recipeRouter.get("/getCategories", authMiddleware, recipeController.getCategories);
 
+/**
+ * @swagger
+ * /recipe/getUserRecipesAndFavorites:
+ *   get:
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       - Recipe
+ *     summary: Get user's recipes and favorites
+ *     description: Retrieve a list of recipes created by the user and their favorite recipes.
+ *     responses:
+ *       200:
+ *         description: User's recipes and favorites
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 recipes:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Recipe'
+ *                 favorites:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Recipe'
+ *       400:
+ *         description: Failed to fetch user's recipes and favorites
+ */
+recipeRouter.get("/getUserRecipesAndFavorites/:name", authMiddleware, recipeController.getUserRecipesAndFavorites.bind(recipeController));
 
+/**
+ * @swagger
+ * /recipe/search:
+ *   get:
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       - Recipe
+ *     summary: Search recipes
+ *     description: Search for recipes based on a query string.
+ *     parameters:
+ *       - in: query
+ *         name: q
+ *         schema:
+ *           type: string
+ *         description: The search query
+ *     responses:
+ *       200:
+ *         description: Search results
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Recipe'
+ *       500:
+ *         description: Error performing search
+ */
+recipeRouter.get("/search", authMiddleware, recipeController.search.bind(recipeController));
 
+/**
+ * @swagger
+ * /recipe/categorySearch/{name}:
+ *   get:
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       - Recipe
+ *     summary: Search recipes by category
+ *     description: Retrieve recipes by category name.
+ *     parameters:
+ *       - in: path
+ *         name: name
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The category name
+ *     responses:
+ *       200:
+ *         description: Recipes in the specified category
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Recipe'
+ *       500:
+ *         description: Error performing search
+ */
+recipeRouter.get("/categorySearch/:name", authMiddleware, recipeController.categorySearch.bind(recipeController));
 
 /**
  * @swagger
@@ -128,9 +235,10 @@ recipeRouter.get("/categorySearch/:name",authMiddleware,recipeController.categor
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Recipe'
+ *       400:
+ *         description: Failed to fetch top recipes
  */
-
-recipeRouter.get("/topFive",recipeController.getTopFive)
+recipeRouter.get("/topFive", recipeController.getTopFive);
 
 /**
  * @swagger
@@ -141,14 +249,14 @@ recipeRouter.get("/topFive",recipeController.getTopFive)
  *     tags:
  *       - Recipe
  *     summary: Get a recipe by id
- *     description:  need to provide the access token in the auth header.
+ *     description: Need to provide the access token in the auth header.
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         description: The recipe id
  *         schema:
  *           type: string
+ *         description: The recipe id
  *     responses:
  *       200:
  *         description: A detailed view of the recipe
@@ -156,9 +264,13 @@ recipeRouter.get("/topFive",recipeController.getTopFive)
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Recipe'
+ *       404:
+ *         description: Recipe not found
+ *       400:
+ *         description: Failed to fetch recipe
  */
-recipeRouter.get("/:id",authMiddleware,recipeController.get.bind(recipeController))
-//add swagger to isLiked
+recipeRouter.get("/:id", authMiddleware, recipeController.get.bind(recipeController));
+
 /**
  * @swagger
  * /recipe/isLiked/{id}:
@@ -168,7 +280,7 @@ recipeRouter.get("/:id",authMiddleware,recipeController.get.bind(recipeControlle
  *     tags:
  *       - Recipe
  *     summary: Check if the recipe is liked
- *     description:  need to provide the access token in the auth header.
+ *     description: Need to provide the access token in the auth header.
  *     parameters:
  *       - in: path
  *         name: id
@@ -183,8 +295,10 @@ recipeRouter.get("/:id",authMiddleware,recipeController.get.bind(recipeControlle
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Recipe'
+ *       400:
+ *         description: Failed to check if recipe is liked
  */
-recipeRouter.get("/isLiked/:id",authMiddleware,recipeController.isLiked.bind(recipeController))
+recipeRouter.get("/isLiked/:id", authMiddleware, recipeController.isLiked.bind(recipeController));
 
 /**
  * @swagger
@@ -195,7 +309,7 @@ recipeRouter.get("/isLiked/:id",authMiddleware,recipeController.isLiked.bind(rec
  *     tags:
  *       - Recipe
  *     summary: Like a recipe
- *     description:  need to provide the access token in the auth header.
+ *     description: Need to provide the access token in the auth header.
  *     parameters:
  *       - in: path
  *         name: id
@@ -210,8 +324,12 @@ recipeRouter.get("/isLiked/:id",authMiddleware,recipeController.isLiked.bind(rec
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Recipe'
+ *       400:
+ *         description: You have already liked this recipe
+ *       404:
+ *         description: Recipe not found
  */
-recipeRouter.post("/like/:id",authMiddleware,recipeController.likeIncrement.bind(recipeController))
+recipeRouter.post("/like/:id", authMiddleware, recipeController.likeIncrement.bind(recipeController));
 
 /**
  * @swagger
@@ -222,7 +340,7 @@ recipeRouter.post("/like/:id",authMiddleware,recipeController.likeIncrement.bind
  *     tags:
  *       - Recipe
  *     summary: Unlike a recipe
- *     description:  need to provide the access token in the auth header.
+ *     description: Need to provide the access token in the auth header.
  *     parameters:
  *       - in: path
  *         name: id
@@ -237,9 +355,12 @@ recipeRouter.post("/like/:id",authMiddleware,recipeController.likeIncrement.bind
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Recipe'
+ *       400:
+ *         description: You haven't liked this recipe yet
+ *       404:
+ *         description: Recipe not found
  */
-recipeRouter.post("/unlike/:id",authMiddleware,recipeController.likeDecrement.bind(recipeController))
-
+recipeRouter.post("/unlike/:id", authMiddleware, recipeController.likeDecrement.bind(recipeController));
 
 /**
  * @swagger
@@ -261,12 +382,11 @@ recipeRouter.post("/unlike/:id",authMiddleware,recipeController.likeDecrement.bi
  *             recipeEditExample:
  *               value:
  *                 _id: "123124143"
- *                 name: "mac&cheese"
+ *                 name: "Spaghetti Carbonara"
  *                 category: "dinner"
- *                 ingredients: ["cheese", "salt", "pasta", "cream", "pepper", "onion"]
- *                 instructions: ["cook pasta", "cook cream with salt", "add all with cheese", "add pepper and onion"]
- *                 image: "https://example.com/mac-and-cheese.jpg"
- * 
+ *                 ingredients: ["spaghetti", "eggs", "pancetta", "parmesan cheese", "black pepper"]
+ *                 instructions: ["Cook spaghetti according to package instructions.", "In a separate pan, cook pancetta until crispy.", "Whisk eggs and Parmesan together in a bowl.", "Combine spaghetti, pancetta, and egg mixture.", "Season with black pepper and serve."]
+ *                 image: "https://example.com/spaghetti-carbonara.jpg"
  *     responses:
  *       200:
  *         description: The recipe was successfully edited
@@ -274,9 +394,12 @@ recipeRouter.post("/unlike/:id",authMiddleware,recipeController.likeDecrement.bi
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Recipe'
+ *       400:
+ *         description: Invalid input
+ *       404:
+ *         description: Recipe not found
  */
-
-recipeRouter.put("/",authMiddleware,recipeController.edit.bind(recipeController))
+recipeRouter.put("/", authMiddleware, recipeController.edit.bind(recipeController));
 
 /**
  * @swagger
@@ -286,18 +409,23 @@ recipeRouter.put("/",authMiddleware,recipeController.edit.bind(recipeController)
  *       - bearerAuth: []
  *     tags:
  *       - Recipe
- *     parameters:
- *      - in: path
- *        name: id
- *        required: true
  *     summary: Delete a recipe
  *     description: Need to provide the access token in the auth header.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The recipe id to delete
  *     responses:
  *       200:
- *         description: The recipe was successfully deleted!
+ *         description: The recipe was successfully deleted
+ *       400:
+ *         description: Invalid recipe id
+ *       404:
+ *         description: Recipe not found
  */
-recipeRouter.delete("/:id",authMiddleware,recipeController.delete.bind(recipeController))
-
-
+recipeRouter.delete("/:id", authMiddleware, recipeController.delete.bind(recipeController));
 
 export default recipeRouter;

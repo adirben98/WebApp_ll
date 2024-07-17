@@ -223,7 +223,7 @@ describe("Recipe Tests", () => {
     
 
     const res = await request(app)
-      .get("/recipe/getUserRecipesAndFavorites")
+      .get("/recipe/getUserRecipesAndFavorites/"+user.username)
       .set("Authorization", "Bearer " + user.accessToken)
       .send();
     expect(res.statusCode).toEqual(200);
