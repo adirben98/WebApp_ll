@@ -123,6 +123,8 @@ class recipeController extends BaseController<IRecipe> {
       res.status(500).json({ message: 'Error performing search', error: err });
     }
   }
+
+  
 }
 
 export default new recipeController();

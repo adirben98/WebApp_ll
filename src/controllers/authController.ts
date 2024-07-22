@@ -200,7 +200,7 @@ const refresh = async (req: Request, res: Response) => {
         if (user == null) {
           return res.sendStatus(403);
         }
-        if (!user.tokens.includes(refreshToken)) {
+        if (!user.tokens.includes(refreshToken)) { 
           user.tokens = [];
           await user.save();
           return res.sendStatus(403);
@@ -320,10 +320,10 @@ export const authMiddleware = async (
    
   
 };
-const updateUserImg=async (req: Request, res: Response) =>{
+const updateUserImg=async (req: AuthRequest, res: Response) =>{
   try{
     const imgUrl = req.body.imgUrl;
-    const username = req.body.username;
+    const username = req.user._id;
     const user = await User.findOne({ username: username });
     user.image = imgUrl;
     await user.save()

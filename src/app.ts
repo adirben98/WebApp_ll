@@ -6,7 +6,6 @@ import fileRoute from "./Routes/fileRouter";
 import recipeRouter from "./Routes/recipeRouter";
 import commentRouter from "./Routes/commentRouter";
 import authRouter from "./Routes/authRouter";
-import restApiRouter from "./Routes/restApiRouter";
 import env from "dotenv"
 env.config();
 import mongoose from "mongoose";
@@ -42,20 +41,13 @@ const init = () => {
       app.use(bodyParser.json());
 
 
-      // app.use((req, res, next) => {
-      //   res.header("Access-Control-Allow-Origin", "*");
-      //   res.header("Access-Control-Allow-Headers","*");
-      //   res.header("Access-Control-Allow-Methods","*");
-        
-      //   next();
-      // })
+    
       app.use(cors());
       app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
       app.use("/file", fileRoute);
       app.use("/auth", authRouter);
       app.use("/recipe", recipeRouter);
       app.use("/comment", commentRouter);
-      app.use("/restApi",restApiRouter)
       app.use('/public',express.static("public"))
 
 

@@ -2,6 +2,7 @@ import express from "express";
 const recipeRouter = express.Router();
 import recipeController from "../controllers/recipeController";
 import { authMiddleware } from "../controllers/authController";
+import restApiController from "../controllers/restApi";
 
 /**
  * @swagger
@@ -101,6 +102,8 @@ import { authMiddleware } from "../controllers/authController";
  *         description: Invalid input
  */
 recipeRouter.post("/", authMiddleware, recipeController.post.bind(recipeController));
+recipeRouter.get("/randomRESTApi", authMiddleware, restApiController.getFiveRandomRecipe)
+
 
 /**
  * @swagger
@@ -186,6 +189,7 @@ recipeRouter.get("/getUserRecipesAndFavorites/:name", authMiddleware, recipeCont
  *         description: Error performing search
  */
 recipeRouter.get("/search", authMiddleware, recipeController.search.bind(recipeController));
+recipeRouter.get("/searchFromAPI", authMiddleware, restApiController.searchRecipes);
 
 /**
  * @swagger
@@ -427,5 +431,6 @@ recipeRouter.put("/", authMiddleware, recipeController.edit.bind(recipeControlle
  *         description: Recipe not found
  */
 recipeRouter.delete("/:id", authMiddleware, recipeController.delete.bind(recipeController));
+
 
 export default recipeRouter;
