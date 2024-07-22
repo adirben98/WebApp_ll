@@ -13,8 +13,8 @@
     "testRecipe": "tsc && jest --detectOpenHandles --forceExit ./src/tests/recipe.test.ts",
     "testComment": "tsc && jest --detectOpenHandles --forceExit ./src/tests/comment.test.ts",
     "testSocket": "tsc && jest --detectOpenHandles --forceExit ./src/tests/socket.test.ts",
-    "prod": "tsc -p tsconfig_prod.json && node ./dist/src/server.js",
-    "prod1": "cp .envprod .env && tsc -p tsconfig_prod.json && node ./dist/src/server.js"
+    "prod1": "tsc -p tsconfig_prod.json && node ./dist/src/server.js",
+    "prod": "cp .envprod .env && tsc -p tsconfig_prod.json && pm2 restart ecosystem.config.js --env production"
 
   },
   "author": "",
