@@ -324,7 +324,7 @@ const updateUserImg=async (req: AuthRequest, res: Response) =>{
   try{
     const imgUrl = req.body.imgUrl;
     const username = req.user._id;
-    const user = await User.findOne({ username: username });
+    const user = await User.findOne({ _id: username });
     user.image = imgUrl;
     await user.save()
     return res.status(200).send(user)

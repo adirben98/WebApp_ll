@@ -172,7 +172,7 @@ describe("Auth Tests", () => {
     const newImage = "https://example.com/new-image.png";
     const res = await request(app).put("/auth/updateUserImg")
       .set("Authorization", "Bearer " + user.accessToken)
-      .send({ username: user.username, imgUrl: newImage });
+      .send({  imgUrl: newImage });
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty("image", newImage);
   });
