@@ -43,6 +43,7 @@ const init = () => {
 
     
       app.use(cors());
+      
       app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
       app.use("/file", fileRoute);
       app.use("/auth", authRouter);
