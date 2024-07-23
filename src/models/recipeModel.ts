@@ -1,3 +1,4 @@
+import moment from "moment";
 import mongoose from "mongoose";
 
 
@@ -10,7 +11,7 @@ export interface IRecipe {
     description: string;
     ingredients: string[];
     instructions: string;
-    createdAt:Date
+    createdAt:string;
     image: string;
     likes: number;
     likedBy: string[];
@@ -46,8 +47,8 @@ const RecipeSchema = new mongoose.Schema<IRecipe>({
         required: true,
     },
     createdAt: {
-        type: Date,
-        default: Date.now,
+        type: String,
+        default: moment().format("MMMM Do YYYY, h:mm:ss a"),
     },
     image:{
         type: String,

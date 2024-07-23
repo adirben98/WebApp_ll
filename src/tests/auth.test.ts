@@ -5,6 +5,7 @@ import { App } from "supertest/types";
 import User from "../models/userModel";
 import Recipe, { IRecipe } from "../models/recipeModel";
 import { OAuth2Client } from "google-auth-library";
+import moment from "moment";
 
 jest.mock("google-auth-library");
 
@@ -33,7 +34,7 @@ const testRecipe: IRecipe = {
   instructions: "cook pasta, cook cream with salt ,add all with cheese",
   image: "https://www.google.com/search?q=mac+and+cheese&rlz=1C1GCEU_enIL832IL832&source=lnms&tbm=isch&sa=X&ved=0ahUKEwiJ9J6V9JLzAhXQzIUKHbJzDZQQ_AUIBygC&biw=1366&bih=657#imgrc=5",
   authorImg: "https://cdn4.iconfinder.com/data/icons/avatars-xmas-giveaway/128/batman_hero_avatar_comics-512.png",
-  createdAt: new Date()
+  createdAt: moment().format("MMMM Do YYYY, h:mm:ss a")
   , likedBy: [],
   likes: 0
 }

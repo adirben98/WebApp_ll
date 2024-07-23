@@ -6,6 +6,7 @@ import Recipe, { IRecipe } from "../models/recipeModel";
 import { TestUser } from "./auth.test";
 import User from "../models/userModel";
 import axios from 'axios';
+import moment from "moment";
 
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
@@ -23,7 +24,7 @@ let testRecipe: IRecipe = {
   likedBy: [],
   authorImg:
     "https://cdn4.iconfinder.com/data/icons/avatars-xmas-giveaway/128/batman_hero_avatar_comics-512.png",
-  createdAt: new Date(),
+  createdAt: moment().format("MMMM Do YYYY, h:mm:ss a"),
 };
 const user: TestUser = {
   email: "Idan@gmail.com",

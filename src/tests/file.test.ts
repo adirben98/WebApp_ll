@@ -18,14 +18,12 @@ afterAll(async () => {
 describe("File Tests", () => {
     test("upload file", async () => {
         const filePath = path.join(__dirname, 'image.png');
-        console.log(filePath);
 
         try {
             const response = await request(app)
                 .post("/file?file=123.png").attach('file', filePath)
             expect(response.statusCode).toEqual(200);
             let url = response.body.url;
-            console.log(url);
             url = url.replace(/^.*\/\/[^/]+/, '')
             const res = await request(app).get(url)
             expect(res.statusCode).toEqual(200);

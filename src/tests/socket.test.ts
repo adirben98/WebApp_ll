@@ -11,8 +11,8 @@ describe("my awesome project", () => {
 
     beforeAll(async () => {
         const port = process.env.PORT;
-
-        server = await init();
+        const app = await init();
+        server = http.createServer(app);
         io(server);
 
         await new Promise<void>((resolve, reject) => {
