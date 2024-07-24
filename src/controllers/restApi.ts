@@ -78,7 +78,7 @@ const categorySearch=async(req: Request, res: Response) =>{
     const results=await axios.get("https://www.themealdb.com/api/json/v1/1/filter.php?c="+category);
     const arr=[]
     for (let i=0;i<results.data.meals.length;i++){
-      arr.push({name:results.data.meals[i].strMeal, image:results.data.meals[i].strMealThumb});
+      arr.push(resToIrecipe(results.data.meals[i]));
     }
     res.status(200).send(arr);
   } catch (err) {
@@ -91,6 +91,9 @@ const getRecipeByName = async (req: Request, res: Response) => {
     const results = await axios.get(
       "https://www.themealdb.com/api/json/v1/1/search.php?s=" + name
     );
+    if (results.data.meals === null) {
+      res.status(404).json({ message: "Recipe not found" });
+      return}
     res.status(200).send(resToIrecipe(results.data.meals[0]));
   } catch (err) {
     res.status(500).json({ message: 'Error performing search', error: err });
