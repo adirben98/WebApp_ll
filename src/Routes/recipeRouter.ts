@@ -102,9 +102,54 @@ import restApiController from "../controllers/restApi";
  *         description: Invalid input
  */
 recipeRouter.post("/", authMiddleware, recipeController.post.bind(recipeController));
-recipeRouter.get("/randomRESTApi", authMiddleware, restApiController.getFiveRandomRecipe)
-recipeRouter.get("/", authMiddleware, recipeController.getAll.bind(restApiController));
 
+/**
+ * @swagger
+ * /recipe/randomRESTApi:
+ *   get:
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       - Recipe
+ *     summary: Get five random recipes
+ *     description: Retrieve five random recipes from the REST API.
+ *     responses:
+ *       200:
+ *         description: An array of five random recipes
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Recipe'
+ *       400:
+ *         description: Failed to fetch random recipes
+ */
+recipeRouter.get("/randomRESTApi", authMiddleware, restApiController.getFiveRandomRecipe);
+
+/**
+ * @swagger
+ * /recipe:
+ *   get:
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       - Recipe
+ *     summary: Get all recipes
+ *     description: Retrieve a list of all recipes.
+ *     responses:
+ *       200:
+ *         description: A list of recipes
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Recipe'
+ *       400:
+ *         description: Failed to fetch recipes
+ */
+recipeRouter.get("/", authMiddleware, recipeController.getAll.bind(recipeController));
 
 /**
  * @swagger
@@ -132,7 +177,7 @@ recipeRouter.get("/getCategories", authMiddleware, restApiController.getCategori
 
 /**
  * @swagger
- * /recipe/getUserRecipesAndFavorites:
+ * /recipe/getUserRecipesAndFavorites/{name}:
  *   get:
  *     security:
  *       - bearerAuth: []
@@ -140,6 +185,13 @@ recipeRouter.get("/getCategories", authMiddleware, restApiController.getCategori
  *       - Recipe
  *     summary: Get user's recipes and favorites
  *     description: Retrieve a list of recipes created by the user and their favorite recipes.
+ *     parameters:
+ *       - in: path
+ *         name: name
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The username
  *     responses:
  *       200:
  *         description: User's recipes and favorites
@@ -221,6 +273,36 @@ recipeRouter.get("/search", authMiddleware, recipeController.search.bind(recipeC
  *         description: Error performing search
  */
 recipeRouter.get("/categorySearch/:name", authMiddleware, restApiController.categorySearch.bind(recipeController));
+
+/**
+ * @swagger
+ * /recipe/recipeFromApi/{name}:
+ *   get:
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       - Recipe
+ *     summary: Get a recipe by name from API
+ *     description: Retrieve a recipe by name from the external API.
+ *     parameters:
+ *       - in: path
+ *         name: name
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The recipe name
+ *     responses:
+ *       200:
+ *         description: The recipe was found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Recipe'
+ *       404:
+ *         description: Recipe not found
+ *       500:
+ *         description: Error performing search
+ */
 recipeRouter.get("/recipeFromApi/:name", authMiddleware, restApiController.getRecipeByName.bind(recipeController));
 
 /**
@@ -432,6 +514,5 @@ recipeRouter.put("/", authMiddleware, recipeController.edit.bind(recipeControlle
  *         description: Recipe not found
  */
 recipeRouter.delete("/:id", authMiddleware, recipeController.delete.bind(recipeController));
-
 
 export default recipeRouter;

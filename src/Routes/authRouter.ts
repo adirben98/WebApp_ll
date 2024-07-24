@@ -4,20 +4,20 @@ import authController, { authMiddleware } from "../controllers/authController";
 import { auth } from "google-auth-library";
 
 /**
-* @swagger
-* tags:
-*   name: Auth
-*   description: The Authentication API
-*/
+ * @swagger
+ * tags:
+ *   name: Auth
+ *   description: The Authentication API
+ */
 /**
-* @swagger
-* components:
-*   securitySchemes:
-*       bearerAuth:
-*           type: http
-*           scheme: bearer
-*           bearerFormat: JWT
-*/
+ * @swagger
+ * components:
+ *   securitySchemes:
+ *       bearerAuth:
+ *           type: http
+ *           scheme: bearer
+ *           bearerFormat: JWT
+ */
 /**
  * @swagger
  * components:
@@ -44,25 +44,25 @@ import { auth } from "google-auth-library";
  *         password: '1234'
  */
 /**
-* @swagger
-* components:
-*   schemas:
-*     Tokens:
-*       type: object
-*       required:
-*         - accessToken
-*         - refreshToken
-*       properties:
-*         accessToken:
-*           type: string
-*           description: The JWT access token
-*         refreshToken:
-*           type: string
-*           description: The JWT refresh token
-*       example:
-*         accessToken: '123cd123x1xx1'
-*         refreshToken: '134r2134cr1x3c'
-*/
+ * @swagger
+ * components:
+ *   schemas:
+ *     Tokens:
+ *       type: object
+ *       required:
+ *         - accessToken
+ *         - refreshToken
+ *       properties:
+ *         accessToken:
+ *           type: string
+ *           description: The JWT access token
+ *         refreshToken:
+ *           type: string
+ *           description: The JWT refresh token
+ *       example:
+ *         accessToken: '123cd123x1xx1'
+ *         refreshToken: '134r2134cr1x3c'
+ */
 
 /**
  * @swagger
@@ -254,7 +254,7 @@ authRouter.post("/checkToken", authController.checkToken);
  *       400:
  *         description: Error updating user image
  */
-authRouter.put("/updateUserImg", authMiddleware,authController.updateUserImg);
+authRouter.put("/updateUserImg", authMiddleware, authController.updateUserImg);
 
 /**
  * @swagger
@@ -337,6 +337,34 @@ authRouter.get("/logout", authController.logout);
  *         description: Invalid credentials or error changing password
  */
 authRouter.put("/changePassword", authMiddleware, authController.changePassword);
-authRouter.get("/getUser/:name",authMiddleware,authController.getUser);
+
+/**
+ * @swagger
+ * /auth/getUser/{name}:
+ *   get:
+ *     summary: Retrieve a user by username
+ *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: name
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The username of the user to retrieve
+ *     responses:
+ *       200:
+ *         description: The user was found and returned
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Internal server error
+ */
+authRouter.get("/getUser/:name", authMiddleware, authController.getUser);
 
 export default authRouter;

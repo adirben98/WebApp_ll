@@ -177,15 +177,13 @@ describe("Recipe Tests", () => {
     expect(res2.body.likes).toEqual(likes - 1);
   });
 
-
-
   test("Get Categories", async () => {
     const categories = {
       data: {
-        meals: [
-          { strCategory: 'Italian' },
-          { strCategory: 'American' },
-          { strCategory: 'Mexican' }
+        categories: [
+          { strCategory: 'Italian', strCategoryThumb: 'https://example.com/italian.jpg' },
+          { strCategory: 'American', strCategoryThumb: 'https://example.com/american.jpg' },
+          { strCategory: 'Mexican', strCategoryThumb: 'https://example.com/mexican.jpg' }
         ]
       }
     };
@@ -196,7 +194,11 @@ describe("Recipe Tests", () => {
       .set("Authorization", "Bearer " + user.accessToken)
       .send();
     expect(res.statusCode).toEqual(200);
-    expect(res.body).toEqual(['Italian', 'American', 'Mexican']);
+    expect(res.body).toEqual([
+      { name: 'Italian', image: 'https://example.com/italian.jpg' },
+      { name: 'American', image: 'https://example.com/american.jpg' },
+      { name: 'Mexican', image: 'https://example.com/mexican.jpg' }
+    ]);
   });
 
   test("Is Liked", async () => {
@@ -221,10 +223,8 @@ describe("Recipe Tests", () => {
   });
 
   test("Get User Recipes And Favorites", async () => {
-    
-
     const res = await request(app)
-      .get("/recipe/getUserRecipesAndFavorites/"+user.username)
+      .get("/recipe/getUserRecipesAndFavorites/" + user.username)
       .set("Authorization", "Bearer " + user.accessToken)
       .send();
     expect(res.statusCode).toEqual(200);
@@ -242,14 +242,135 @@ describe("Recipe Tests", () => {
   });
 
   test("Search Recipes By Category", async () => {
+    const categorySearchResponse = {
+      data: {
+        meals: [
+          {
+            idMeal: "52772",
+            strMeal: "Spaghetti Carbonara",
+            strCategory: "Italian",
+            strArea: "Italian",
+            strInstructions: "Instructions for Spaghetti Carbonara...",
+            strMealThumb: "https://www.themealdb.com/images/media/meals/llcbn01574260722.jpg",
+            strIngredient1: "Spaghetti",
+            strIngredient2: "Egg Yolks",
+            strIngredient3: "Pancetta",
+            strIngredient4: "Parmesan Cheese",
+            strIngredient5: "Black Pepper",
+            strMeasure1: "400g",
+            strMeasure2: "4",
+            strMeasure3: "100g",
+            strMeasure4: "50g",
+            strMeasure5: "To Taste"
+          }
+        ]
+      }
+    };
+  
+    mockedAxios.get.mockResolvedValue(categorySearchResponse);
+  
     const res = await request(app)
       .get("/recipe/categorySearch/Italian")
       .set("Authorization", "Bearer " + user.accessToken)
       .send();
     expect(res.statusCode).toEqual(200);
     expect(res.body[0].category).toEqual("Italian");
+    expect(res.body[0].name).toEqual("Spaghetti Carbonara");
+    expect(res.body[0].ingredients).toEqual([
+      "Spaghetti - 400g",
+      "Egg Yolks - 4",
+      "Pancetta - 100g",
+      "Parmesan Cheese - 50g",
+      "Black Pepper - To Taste"
+    ]);
+    expect(res.body[0].instructions).toEqual("Instructions for Spaghetti Carbonara...");
+    expect(res.body[0].image).toEqual("https://www.themealdb.com/images/media/meals/llcbn01574260722.jpg");
+  });
+  
+
+  test("Get Five Random Recipes", async () => {
+    const randomRecipe = {
+      data: {
+        meals: [
+          {
+            idMeal: "52772",
+            strMeal: "Spaghetti Carbonara",
+            strCategory: "Italian",
+            strArea: "Italian",
+            strInstructions: "Instructions for Spaghetti Carbonara...",
+            strMealThumb: "https://www.themealdb.com/images/media/meals/llcbn01574260722.jpg",
+            strTags: "Pasta,Italian",
+            strYoutube: "https://www.youtube.com/watch?v=3AAdKl1UYZs",
+            strIngredient1: "Spaghetti",
+            strIngredient2: "Egg Yolks",
+            strIngredient3: "Pancetta",
+            strIngredient4: "Parmesan Cheese",
+            strIngredient5: "Black Pepper",
+            strMeasure1: "400g",
+            strMeasure2: "4",
+            strMeasure3: "100g",
+            strMeasure4: "50g",
+            strMeasure5: "To Taste"
+          }
+        ]
+      }
+    };
+    mockedAxios.get.mockResolvedValue(randomRecipe);
+
+    const res = await request(app)
+      .get("/recipe/randomRESTApi")
+      .set("Authorization", "Bearer " + user.accessToken)
+      .send();
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.length).toEqual(5);
+    expect(res.body[0].name).toEqual("Spaghetti Carbonara");
   });
 
+  test("Get Recipe By Name From API", async () => {
+    const recipeByName = {
+      data: {
+        meals: [
+          {
+            idMeal: "52772",
+            strMeal: "Spaghetti Carbonara",
+            strCategory: "Italian",
+            strArea: "Italian",
+            strInstructions: "Instructions for Spaghetti Carbonara...",
+            strMealThumb: "https://www.themealdb.com/images/media/meals/llcbn01574260722.jpg",
+            strTags: "Pasta,Italian",
+            strYoutube: "https://www.youtube.com/watch?v=3AAdKl1UYZs",
+            strIngredient1: "Spaghetti",
+            strIngredient2: "Egg Yolks",
+            strIngredient3: "Pancetta",
+            strIngredient4: "Parmesan Cheese",
+            strIngredient5: "Black Pepper",
+            strMeasure1: "400g",
+            strMeasure2: "4",
+            strMeasure3: "100g",
+            strMeasure4: "50g",
+            strMeasure5: "To Taste"
+          }
+        ]
+      }
+    };
+    mockedAxios.get.mockResolvedValue(recipeByName);
+
+    const res = await request(app)
+      .get("/recipe/recipeFromApi/Spaghetti Carbonara")
+      .set("Authorization", "Bearer " + user.accessToken)
+      .send();
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.name).toEqual("Spaghetti Carbonara");
+    expect(res.body.category).toEqual("Italian");
+    expect(res.body.ingredients).toEqual([
+      "Spaghetti - 400g",
+      "Egg Yolks - 4",
+      "Pancetta - 100g",
+      "Parmesan Cheese - 50g",
+      "Black Pepper - To Taste"
+    ]);
+    expect(res.body.instructions).toEqual("Instructions for Spaghetti Carbonara...");
+  });
 
   test("Delete Recipe", async () => {
     const res = await request(app)
