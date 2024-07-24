@@ -221,7 +221,7 @@ recipeRouter.get("/search", authMiddleware, recipeController.search.bind(recipeC
  *         description: Error performing search
  */
 recipeRouter.get("/categorySearch/:name", authMiddleware, restApiController.categorySearch.bind(recipeController));
-recipeRouter.get("/recipeFromApi/:name", authMiddleware, restApiController.categorySearch.bind(recipeController));
+recipeRouter.get("/recipeFromApi/:name", authMiddleware, restApiController.getRecipeByName.bind(recipeController));
 
 /**
  * @swagger

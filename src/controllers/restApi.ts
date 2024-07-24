@@ -53,6 +53,7 @@ const resToIrecipe = (res: any) => {
     ingredients: ingredients,
     instructions: res.strInstructions,
     image: res.strMealThumb,
+    description:res.strArea
   };
 };
 
@@ -90,7 +91,7 @@ const getRecipeByName = async (req: Request, res: Response) => {
     const results = await axios.get(
       "https://www.themealdb.com/api/json/v1/1/search.php?s=" + name
     );
-    res.status(200).send(results.data.meals);
+    res.status(200).send(resToIrecipe(results.data.meals[0]));
   } catch (err) {
     res.status(500).json({ message: 'Error performing search', error: err });
   }
