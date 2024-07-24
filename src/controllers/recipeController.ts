@@ -9,20 +9,16 @@ class recipeController extends BaseController<IRecipe> {
   constructor() {
     super(Recipe);
   }
-  async getCategories(req: AuthRequest, res: Response) {
+async getAll(req: AuthRequest, res: Response) {
     try {
-      const categories = await axios.get(
-        "https://www.themealdb.com/api/json/v1/1/list.php?c=list"
-      );
-      let arr = [];
-      for (let i = 0; i < categories.data.meals.length; i++) {
-        arr.push(categories.data.meals[i].strCategory);
-      }
-      res.status(200).send(arr);
-    } catch (err) {
-      res.status(400).send(err.message);
+      const recipes = await Recipe.find();
+      res.status(200).send(recipes);
+    } catch (error) {
+      res.status(400).send(error.message);
     }
-  }
+}
+
+  
   async getTopFive(req: AuthRequest, res: Response) {
     try {
       const recipes = await Recipe.find().sort({ likes: -1 }).limit(5);
@@ -114,15 +110,7 @@ class recipeController extends BaseController<IRecipe> {
       res.status(500).json({ message: 'Error performing search', error: err });
     }
   }
-  async categorySearch(req: AuthRequest, res: Response) {
-    const category = req.params.name;
-    try {
-      const results = await Recipe.find({ category: category });
-      res.status(200).send(results);
-    } catch (err) {
-      res.status(500).json({ message: 'Error performing search', error: err });
-    }
-  }
+  
 
   
 }

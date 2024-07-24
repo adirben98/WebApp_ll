@@ -103,6 +103,7 @@ import restApiController from "../controllers/restApi";
  */
 recipeRouter.post("/", authMiddleware, recipeController.post.bind(recipeController));
 recipeRouter.get("/randomRESTApi", authMiddleware, restApiController.getFiveRandomRecipe)
+recipeRouter.get("/", authMiddleware, recipeController.getAll.bind(restApiController));
 
 
 /**
@@ -127,7 +128,7 @@ recipeRouter.get("/randomRESTApi", authMiddleware, restApiController.getFiveRand
  *       400:
  *         description: Failed to fetch categories
  */
-recipeRouter.get("/getCategories", authMiddleware, recipeController.getCategories);
+recipeRouter.get("/getCategories", authMiddleware, restApiController.getCategories);
 
 /**
  * @swagger
@@ -189,7 +190,6 @@ recipeRouter.get("/getUserRecipesAndFavorites/:name", authMiddleware, recipeCont
  *         description: Error performing search
  */
 recipeRouter.get("/search", authMiddleware, recipeController.search.bind(recipeController));
-recipeRouter.get("/searchFromAPI", authMiddleware, restApiController.searchRecipes);
 
 /**
  * @swagger
@@ -220,7 +220,8 @@ recipeRouter.get("/searchFromAPI", authMiddleware, restApiController.searchRecip
  *       500:
  *         description: Error performing search
  */
-recipeRouter.get("/categorySearch/:name", authMiddleware, recipeController.categorySearch.bind(recipeController));
+recipeRouter.get("/categorySearch/:name", authMiddleware, restApiController.categorySearch.bind(recipeController));
+recipeRouter.get("/recipeFromApi/:name", authMiddleware, restApiController.categorySearch.bind(recipeController));
 
 /**
  * @swagger
