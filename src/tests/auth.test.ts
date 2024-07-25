@@ -173,7 +173,7 @@ describe("Auth Tests", () => {
     const newImage = "https://example.com/new-image.png";
     const res = await request(app).put("/auth/updateUserImg")
       .set("Authorization", "Bearer " + user.accessToken)
-      .send({  imgUrl: newImage });
+      .send({ imgUrl: newImage });
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty("image", newImage);
   });
@@ -192,5 +192,15 @@ describe("Auth Tests", () => {
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty("accessToken");
     expect(res.body).toHaveProperty("refreshToken");
+  });
+
+  test("Get User", async () => {
+    const res = await request(app)
+      .get("/auth/getUser/" + user.username)
+      .set("Authorization", "Bearer " + user.accessToken)
+      .send();
+    expect(res.statusCode).toEqual(200);
+    expect(res.body).toHaveProperty("username", user.username);
+    expect(res.body).toHaveProperty("email", user.email);
   });
 });

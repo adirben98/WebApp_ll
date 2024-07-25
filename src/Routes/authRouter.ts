@@ -254,7 +254,7 @@ authRouter.post("/checkToken", authController.checkToken);
  *       400:
  *         description: Error updating user image
  */
-authRouter.put("/updateUserImg", authMiddleware, authController.updateUserImg);
+authRouter.put("/updateUserImage", authMiddleware, authController.updateUserImg);
 
 /**
  * @swagger
