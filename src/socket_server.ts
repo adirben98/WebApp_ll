@@ -7,7 +7,7 @@ import Message from "./models/messageModel"; // Assume Message is a Mongoose mod
 export = (server: http.Server) => {
   const io = new Server(server, {
     cors: {
-      origin: "http://localhost:5173", // Adjust the URL as needed
+      origin: "*", 
       methods: ["GET", "POST"],
     },
   });
