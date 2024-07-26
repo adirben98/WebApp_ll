@@ -46,11 +46,12 @@ const init = () => {
       // app.use("/recipe", recipeRouter);
       // app.use("/comment", commentRouter);
 
-      const distPath = path.join(__dirname,'./');
-      app.use(express.static(distPath));
-
+      const distPath = path.join(__dirname, '..', '..');
+      app.use(express.static(path.join(distPath, 'dist')));
+      
+      // Serve index.html for all other routes to support client-side routing
       app.get('*', (req, res) => {
-        res.sendFile(path.join(distPath, 'index.html'));
+        res.sendFile(path.join(distPath, 'dist', 'index.html'));
       });
 
     
