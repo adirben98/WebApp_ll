@@ -46,7 +46,7 @@ const init = () => {
       // app.use("/recipe", recipeRouter);
       // app.use("/comment", commentRouter);
 
-      const distPath = path.join(__dirname, "..", "/front");
+      const distPath = path.join(__dirname, "..", "/dist");
       app.use(express.static(distPath));
 
     
