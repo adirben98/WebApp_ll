@@ -40,20 +40,16 @@ const init = () => {
 
       app.use(cors());
 
-      app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
-      app.use("/file", fileRoute);
-      app.use("/auth", authRouter);
-      app.use("/recipe", recipeRouter);
-      app.use("/comment", commentRouter);
+      // app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
+      // app.use("/file", fileRoute);
+      // app.use("/auth", authRouter);
+      // app.use("/recipe", recipeRouter);
+      // app.use("/comment", commentRouter);
 
-      // Serve static files from the dist directory
-      const distPath = path.join(__dirname, "..", "front");
+      const distPath = path.join(__dirname, "..", "/front");
       app.use(express.static(distPath));
 
-      // Fallback to index.html for client-side routing
-      app.get("*", (req, res) => {
-        res.sendFile(path.join(distPath, "index.html"));
-      });
+    
 
       resolve(app);
     });
