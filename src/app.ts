@@ -40,7 +40,7 @@ const init = () => {
 
       app.use(cors());
 
-      app.use('/public', express.static(path.join(__dirname, 'public')));
+      app.use('/public', express.static('public'));
 
       app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
       app.use("/file", fileRoute);
