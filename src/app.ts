@@ -12,7 +12,7 @@ import bodyParser from "body-parser";
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUI from "swagger-ui-express";
 import cors from "cors";
-import path from "path"; // Import path module
+
 
 const init = () => {
   const promise = new Promise<Express>((resolve) => {
@@ -40,21 +40,12 @@ const init = () => {
 
       app.use(cors());
 
-      // app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
-      // app.use("/file", fileRoute);
-      // app.use("/auth", authRouter);
-      // app.use("/recipe", recipeRouter);
-      // app.use("/comment", commentRouter);
+      app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
+      app.use("/file", fileRoute);
+      app.use("/auth", authRouter);
+      app.use("/recipe", recipeRouter);
+      app.use("/comment", commentRouter);
 
-      const distPath = path.join(__dirname, '..', '..');
-      app.use(express.static(path.join(distPath, 'dist')));
-      
-      // Serve index.html for all other routes to support client-side routing
-      app.get('*', (req, res) => {
-        res.sendFile(path.join(distPath, 'dist', 'index.html'));
-      });
-
-    
 
       resolve(app);
     });
