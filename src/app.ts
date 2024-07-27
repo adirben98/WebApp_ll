@@ -1,6 +1,6 @@
 import express, { Express } from "express";
 const app = express();
-
+import path from "path";
 import fileRoute from "./Routes/fileRouter";
 import recipeRouter from "./Routes/recipeRouter";
 import commentRouter from "./Routes/commentRouter";
@@ -39,6 +39,8 @@ const init = () => {
       app.use(bodyParser.json());
 
       app.use(cors());
+
+      app.use('/public', express.static(path.join(__dirname, 'public')));
 
       app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
       app.use("/file", fileRoute);
