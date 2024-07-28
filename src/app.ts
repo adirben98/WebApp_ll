@@ -5,6 +5,7 @@ import fileRoute from "./Routes/fileRouter";
 import recipeRouter from "./Routes/recipeRouter";
 import commentRouter from "./Routes/commentRouter";
 import authRouter from "./Routes/authRouter";
+import roomRoutes from './Routes/roomRoutes';
 import env from "dotenv"
 env.config();
 import mongoose from "mongoose";
@@ -48,6 +49,7 @@ const init = () => {
       app.use("/auth", authRouter);
       app.use("/recipe", recipeRouter);
       app.use("/comment", commentRouter);
+      app.use('/api/rooms', roomRoutes);
       app.use('/public',express.static("public"))
 
 
