@@ -4,6 +4,7 @@ const RoomSchema = new mongoose.Schema({
   roomId: { type: String, unique: true, required: true },
   user1: { type: String, required: true },
   user2: { type: String, required: true },
+  messagesArray: { type: [String], default: [] }
 });
 
 const Room = mongoose.model('Room', RoomSchema);

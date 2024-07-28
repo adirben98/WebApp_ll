@@ -48,7 +48,7 @@ const init = () => {
       app.use("/auth", authRouter);
       app.use("/recipe", recipeRouter);
       app.use("/comment", commentRouter);
-      app.use('/api/rooms', roomRoutes);
+      app.use("/rooms", roomRoutes);
 
 
       resolve(app);
