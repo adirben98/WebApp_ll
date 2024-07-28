@@ -1,9 +1,13 @@
-import express from "express";
-const recipeRouter = express.Router();
-import recipeController from "../controllers/recipeController";
-import { authMiddleware } from "../controllers/authController";
-import restApiController from "../controllers/restApi";
-
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const recipeRouter = express_1.default.Router();
+const recipeController_1 = __importDefault(require("../controllers/recipeController"));
+const authController_1 = require("../controllers/authController");
+const restApi_1 = __importDefault(require("../controllers/restApi"));
 /**
  * @swagger
  * tags:
@@ -74,7 +78,6 @@ import restApiController from "../controllers/restApi";
  *         likes: 5
  *         likedBy: ["user1", "user2"]
  */
-
 /**
  * @swagger
  * /recipe:
@@ -101,8 +104,7 @@ import restApiController from "../controllers/restApi";
  *       400:
  *         description: Invalid input
  */
-recipeRouter.post("/", authMiddleware, recipeController.post.bind(recipeController));
-
+recipeRouter.post("/", authController_1.authMiddleware, recipeController_1.default.post.bind(recipeController_1.default));
 /**
  * @swagger
  * /recipe/randomRESTApi:
@@ -125,8 +127,7 @@ recipeRouter.post("/", authMiddleware, recipeController.post.bind(recipeControll
  *       400:
  *         description: Failed to fetch random recipes
  */
-recipeRouter.get("/randomRESTApi", authMiddleware, restApiController.getFiveRandomRecipe);
-
+recipeRouter.get("/randomRESTApi", authController_1.authMiddleware, restApi_1.default.getFiveRandomRecipe);
 /**
  * @swagger
  * /recipe:
@@ -149,8 +150,7 @@ recipeRouter.get("/randomRESTApi", authMiddleware, restApiController.getFiveRand
  *       400:
  *         description: Failed to fetch recipes
  */
-recipeRouter.get("/", authMiddleware, recipeController.getAll.bind(recipeController));
-
+recipeRouter.get("/", authController_1.authMiddleware, recipeController_1.default.getAll.bind(recipeController_1.default));
 /**
  * @swagger
  * /recipe/getCategories:
@@ -173,8 +173,7 @@ recipeRouter.get("/", authMiddleware, recipeController.getAll.bind(recipeControl
  *       400:
  *         description: Failed to fetch categories
  */
-recipeRouter.get("/getCategories", authMiddleware, restApiController.getCategories);
-
+recipeRouter.get("/getCategories", authController_1.authMiddleware, restApi_1.default.getCategories);
 /**
  * @swagger
  * /recipe/getUserRecipesAndFavorites/{name}:
@@ -211,8 +210,7 @@ recipeRouter.get("/getCategories", authMiddleware, restApiController.getCategori
  *       400:
  *         description: Failed to fetch user's recipes and favorites
  */
-recipeRouter.get("/getUserRecipesAndFavorites/:name", authMiddleware, recipeController.getUserRecipesAndFavorites.bind(recipeController));
-
+recipeRouter.get("/getUserRecipesAndFavorites/:name", authController_1.authMiddleware, recipeController_1.default.getUserRecipesAndFavorites.bind(recipeController_1.default));
 /**
  * @swagger
  * /recipe/search:
@@ -241,8 +239,7 @@ recipeRouter.get("/getUserRecipesAndFavorites/:name", authMiddleware, recipeCont
  *       500:
  *         description: Error performing search
  */
-recipeRouter.get("/search", authMiddleware, recipeController.search.bind(recipeController));
-
+recipeRouter.get("/search", authController_1.authMiddleware, recipeController_1.default.search.bind(recipeController_1.default));
 /**
  * @swagger
  * /recipe/categorySearch/{name}:
@@ -272,8 +269,7 @@ recipeRouter.get("/search", authMiddleware, recipeController.search.bind(recipeC
  *       500:
  *         description: Error performing search
  */
-recipeRouter.get("/categorySearch/:name", authMiddleware, restApiController.categorySearch.bind(recipeController));
-
+recipeRouter.get("/categorySearch/:name", authController_1.authMiddleware, restApi_1.default.categorySearch.bind(recipeController_1.default));
 /**
  * @swagger
  * /recipe/recipeFromApi/{name}:
@@ -303,8 +299,7 @@ recipeRouter.get("/categorySearch/:name", authMiddleware, restApiController.cate
  *       500:
  *         description: Error performing search
  */
-recipeRouter.get("/recipeFromApi/:name", authMiddleware, restApiController.getRecipeByName.bind(recipeController));
-
+recipeRouter.get("/recipeFromApi/:name", authController_1.authMiddleware, restApi_1.default.getRecipeByName.bind(recipeController_1.default));
 /**
  * @swagger
  * /recipe/topFive:
@@ -325,8 +320,7 @@ recipeRouter.get("/recipeFromApi/:name", authMiddleware, restApiController.getRe
  *       400:
  *         description: Failed to fetch top recipes
  */
-recipeRouter.get("/topFive", recipeController.getTopFive);
-
+recipeRouter.get("/topFive", recipeController_1.default.getTopFive);
 /**
  * @swagger
  * /recipe/{id}:
@@ -356,8 +350,7 @@ recipeRouter.get("/topFive", recipeController.getTopFive);
  *       400:
  *         description: Failed to fetch recipe
  */
-recipeRouter.get("/:id", authMiddleware, recipeController.get.bind(recipeController));
-
+recipeRouter.get("/:id", authController_1.authMiddleware, recipeController_1.default.get.bind(recipeController_1.default));
 /**
  * @swagger
  * /recipe/isLiked/{id}:
@@ -385,8 +378,7 @@ recipeRouter.get("/:id", authMiddleware, recipeController.get.bind(recipeControl
  *       400:
  *         description: Failed to check if recipe is liked
  */
-recipeRouter.get("/isLiked/:id", authMiddleware, recipeController.isLiked.bind(recipeController));
-
+recipeRouter.get("/isLiked/:id", authController_1.authMiddleware, recipeController_1.default.isLiked.bind(recipeController_1.default));
 /**
  * @swagger
  * /recipe/{id}/like:
@@ -416,8 +408,7 @@ recipeRouter.get("/isLiked/:id", authMiddleware, recipeController.isLiked.bind(r
  *       404:
  *         description: Recipe not found
  */
-recipeRouter.post("/like/:id", authMiddleware, recipeController.likeIncrement.bind(recipeController));
-
+recipeRouter.post("/like/:id", authController_1.authMiddleware, recipeController_1.default.likeIncrement.bind(recipeController_1.default));
 /**
  * @swagger
  * /recipe/{id}/unlike:
@@ -447,8 +438,7 @@ recipeRouter.post("/like/:id", authMiddleware, recipeController.likeIncrement.bi
  *       404:
  *         description: Recipe not found
  */
-recipeRouter.post("/unlike/:id", authMiddleware, recipeController.likeDecrement.bind(recipeController));
-
+recipeRouter.post("/unlike/:id", authController_1.authMiddleware, recipeController_1.default.likeDecrement.bind(recipeController_1.default));
 /**
  * @swagger
  * /recipe:
@@ -486,8 +476,7 @@ recipeRouter.post("/unlike/:id", authMiddleware, recipeController.likeDecrement.
  *       404:
  *         description: Recipe not found
  */
-recipeRouter.put("/", authMiddleware, recipeController.edit.bind(recipeController));
-
+recipeRouter.put("/", authController_1.authMiddleware, recipeController_1.default.edit.bind(recipeController_1.default));
 /**
  * @swagger
  * /recipe/{id}:
@@ -513,6 +502,6 @@ recipeRouter.put("/", authMiddleware, recipeController.edit.bind(recipeControlle
  *       404:
  *         description: Recipe not found
  */
-recipeRouter.delete("/:id", authMiddleware, recipeController.delete.bind(recipeController));
-
-export default recipeRouter;
+recipeRouter.delete("/:id", authController_1.authMiddleware, recipeController_1.default.delete.bind(recipeController_1.default));
+exports.default = recipeRouter;
+//# sourceMappingURL=recipeRouter.js.map

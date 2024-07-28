@@ -2,28 +2,6 @@ import axios from "axios";
 import { Request, Response } from "express";
 const apiKey = "1";
 
-const searchRecipes = async (req: Request, res: Response) => {
-  const query = req.query.q;
-  const url =
-    "https://www.themealdb.com/api/json/v1/1/search.php" + "?s=" + query;
-  try {
-    const response = await axios.get(url, {
-      params: {
-        apiKey: apiKey,
-      },
-    });
-    const recipes = response.data.meals
-    let arr = [];
-    for (let i = 0; i < recipes.length; i++) {
-      arr.push(resToIrecipe(recipes[i]));
-    }
-
-    res.status(200).send(arr);
-  } catch (error) {
-    console.error("Error fetching recipe: ", error);
-  }
-};
-
 const getOneRandomRecipe = async () => {
   const url = "https://www.themealdb.com/api/json/v1/1/random.php";
 
@@ -49,14 +27,13 @@ const getFiveRandomRecipe = async (req: Request, res: Response) => {
     }
     const arr = [];
     for (let i = 0; i < recipes.length; i++) {
-        arr.push(resToIrecipe(recipes[i]));
+      arr.push(resToIrecipe(recipes[i]));
     }
     res.status(200).send(arr);
   } catch (error) {
     res.status(400).send(error.message);
   }
 };
-
 
 const resToIrecipe = (res: any) => {
   let ingredients = [];
@@ -76,7 +53,51 @@ const resToIrecipe = (res: any) => {
     ingredients: ingredients,
     instructions: res.strInstructions,
     image: res.strMealThumb,
+    description:res.strArea
   };
 };
 
-export default { getFiveRandomRecipe, searchRecipes };
+const getCategories = async (req: Request, res: Response) => {
+  try {
+    const categories = await axios.get(
+      "https://www.themealdb.com/api/json/v1/1/categories.php"
+    );
+    let arr = [];
+    for (let i = 0; i < categories.data.categories.length; i++) {
+      arr.push({ name: categories.data.categories[i].strCategory, image: categories.data.categories[i].strCategoryThumb });
+    }
+    res.status(200).send(arr);
+  } catch (err) {
+    res.status(400).send(err.message);
+  }
+};
+
+const categorySearch=async(req: Request, res: Response) =>{
+  const category = req.params.name;
+  try {
+    const results=await axios.get("https://www.themealdb.com/api/json/v1/1/filter.php?c="+category);
+    const arr=[]
+    for (let i=0;i<results.data.meals.length;i++){
+      arr.push(resToIrecipe(results.data.meals[i]));
+    }
+    res.status(200).send(arr);
+  } catch (err) {
+    res.status(500).json({ message: 'Error performing search', error: err });
+  }
+}
+const getRecipeByName = async (req: Request, res: Response) => {
+  const name = req.params.name;
+  try {
+    const results = await axios.get(
+      "https://www.themealdb.com/api/json/v1/1/search.php?s=" + name
+    );
+    if (results.data.meals === null) {
+      res.status(404).json({ message: "Recipe not found" });
+      return}
+    res.status(200).send(resToIrecipe(results.data.meals[0]));
+  } catch (err) {
+    res.status(500).json({ message: 'Error performing search', error: err });
+  }
+}
+
+export default { getFiveRandomRecipe, getCategories ,categorySearch,getRecipeByName};

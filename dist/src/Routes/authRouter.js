@@ -1,8 +1,34 @@
-import express from "express";
-const authRouter = express.Router();
-import authController, { authMiddleware } from "../controllers/authController";
-import { auth } from "google-auth-library";
-
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const authRouter = express_1.default.Router();
+const authController_1 = __importStar(require("../controllers/authController"));
 /**
  * @swagger
  * tags:
@@ -63,7 +89,6 @@ import { auth } from "google-auth-library";
  *         accessToken: '123cd123x1xx1'
  *         refreshToken: '134r2134cr1x3c'
  */
-
 /**
  * @swagger
  * /auth/register:
@@ -88,8 +113,7 @@ import { auth } from "google-auth-library";
  *       409:
  *         description: User already exists
  */
-authRouter.post("/register", authController.register);
-
+authRouter.post("/register", authController_1.default.register);
 /**
  * @swagger
  * /auth/isEmailTaken:
@@ -113,8 +137,7 @@ authRouter.post("/register", authController.register);
  *       400:
  *         description: The email is already taken
  */
-authRouter.post("/isEmailTaken", authController.isEmailTaken);
-
+authRouter.post("/isEmailTaken", authController_1.default.isEmailTaken);
 /**
  * @swagger
  * /auth/isUsernameTaken:
@@ -138,8 +161,7 @@ authRouter.post("/isEmailTaken", authController.isEmailTaken);
  *       400:
  *         description: The username is already taken
  */
-authRouter.post("/isUsernameTaken", authController.isUsernameTaken);
-
+authRouter.post("/isUsernameTaken", authController_1.default.isUsernameTaken);
 /**
  * @swagger
  * /auth/login:
@@ -170,8 +192,7 @@ authRouter.post("/isUsernameTaken", authController.isUsernameTaken);
  *       400:
  *         description: User does not exist or invalid credentials
  */
-authRouter.post("/login", authController.login);
-
+authRouter.post("/login", authController_1.default.login);
 /**
  * @swagger
  * /auth/googleLogin:
@@ -200,8 +221,7 @@ authRouter.post("/login", authController.login);
  *       400:
  *         description: Error during Google login
  */
-authRouter.post("/googleLogin", authController.googleLogin);
-
+authRouter.post("/googleLogin", authController_1.default.googleLogin);
 /**
  * @swagger
  * /auth/checkToken:
@@ -218,8 +238,7 @@ authRouter.post("/googleLogin", authController.googleLogin);
  *       400:
  *         description: Error during token check
  */
-authRouter.post("/checkToken", authController.checkToken);
-
+authRouter.post("/checkToken", authController_1.default.checkToken);
 /**
  * @swagger
  * /auth/updateUserImg:
@@ -254,8 +273,7 @@ authRouter.post("/checkToken", authController.checkToken);
  *       400:
  *         description: Error updating user image
  */
-authRouter.put("/updateUserImage", authMiddleware, authController.updateUserImg);
-
+authRouter.put("/updateUserImg", authController_1.authMiddleware, authController_1.default.updateUserImg);
 /**
  * @swagger
  * /auth/refresh:
@@ -279,8 +297,7 @@ authRouter.put("/updateUserImage", authMiddleware, authController.updateUserImg)
  *       400:
  *         description: Error generating new tokens
  */
-authRouter.get("/refresh", authController.refresh);
-
+authRouter.get("/refresh", authController_1.default.refresh);
 /**
  * @swagger
  * /auth/logout:
@@ -300,8 +317,7 @@ authRouter.get("/refresh", authController.refresh);
  *       400:
  *         description: Error during logout
  */
-authRouter.get("/logout", authController.logout);
-
+authRouter.get("/logout", authController_1.default.logout);
 /**
  * @swagger
  * /auth/changePassword:
@@ -336,8 +352,7 @@ authRouter.get("/logout", authController.logout);
  *       400:
  *         description: Invalid credentials or error changing password
  */
-authRouter.put("/changePassword", authMiddleware, authController.changePassword);
-
+authRouter.put("/changePassword", authController_1.authMiddleware, authController_1.default.changePassword);
 /**
  * @swagger
  * /auth/getUser/{name}:
@@ -365,6 +380,6 @@ authRouter.put("/changePassword", authMiddleware, authController.changePassword)
  *       500:
  *         description: Internal server error
  */
-authRouter.get("/getUser/:name", authMiddleware, authController.getUser);
-
-export default authRouter;
+authRouter.get("/getUser/:name", authController_1.authMiddleware, authController_1.default.getUser);
+exports.default = authRouter;
+//# sourceMappingURL=authRouter.js.map

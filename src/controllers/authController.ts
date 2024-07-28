@@ -19,7 +19,7 @@ const register = async (req: Request, res: Response) => {
   const email = req.body.email;
   const password = req.body.password;
   const username = req.body.username;
-  const imgUrl = req.body.userImg;
+  const imgUrl = req.body.image;
   if (email === undefined || password === undefined) {
     return res.status(400).send("Email and password are required");
   }
@@ -48,7 +48,7 @@ const register = async (req: Request, res: Response) => {
     return res.status(201).send({
       email: newUser.email,
       username: newUser.username,
-      imgUrl: newUser.image,
+      image: newUser.image,
       ...tokens,
     });
   } catch (err) {
@@ -145,7 +145,7 @@ const login = async (req: Request, res: Response) => {
     return res.status(200).send({
       email: user.email,
       username: user.username,
-      imgUrl: user.image,
+      image: user.image,
       ...tokens,
     });
   } catch (err) {
@@ -168,14 +168,14 @@ const googleLogin = async (req: Request, res: Response) => {
         email: email,
         username: payload.name,
         password: "google-login",
-        imgUrl: payload.picture,
+        image: payload.picture,
       });
     }
     const tokens = await generateTokens(user);
     res.status(200).send({
       email: user.email,
       username: user.username,
-      imgUrl: user.image,
+      image: user.image,
       ...tokens
     });
   } catch (err) {
