@@ -15,6 +15,7 @@ init().then((app) => {
     const options2 = {
       key: fs.readFileSync("../client-key.pem"),
       cert: fs.readFileSync("../client-cert.pem"),
+      ca: fs.readFileSync("../ca.cert.pem"),
     };
     const server=https.createServer(options2, app)
     io(server);
