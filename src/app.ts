@@ -29,7 +29,7 @@ const init = () => {
             version: "1.0.0",
             description: "REST server including authentication using JWT",
           },
-          servers: [{ url: "http://localhost:3000" }],
+          servers: [{ url: "https://193.106.55.166:80" }],
         },
         apis: ["./src/Routes/*.ts"],
       };
