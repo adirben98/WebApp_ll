@@ -64,7 +64,7 @@ import { checkRoom, createRoom, getMessages, getMyRooms } from '../controllers/r
 
 /**
  * @swagger
- * /check/{roomId}:
+ * /rooms/check/{roomId}:
  *   get:
  *     summary: Check if the room exists
  *     tags: [Rooms]
@@ -92,7 +92,7 @@ router.get('/check/:roomId', authMiddleware, checkRoom);
 
 /**
  * @swagger
- * /create:
+ * /rooms/create:
  *   post:
  *     summary: Create a new room
  *     tags: [Rooms]
@@ -123,7 +123,7 @@ router.post('/create', authMiddleware, createRoom);
 
 /**
  * @swagger
- * /{roomId}/messages:
+ * /rooms/{roomId}/messages:
  *   get:
  *     summary: Retrieve messages for a room
  *     tags: [Rooms]
@@ -150,7 +150,7 @@ router.get('/:roomId/messages', authMiddleware, getMessages);
 
 /**
  * @swagger
- * /getmyrooms:
+ * /rooms/getmyrooms:
  *   get:
  *     summary: Get rooms for the authenticated user
  *     tags: [Rooms]

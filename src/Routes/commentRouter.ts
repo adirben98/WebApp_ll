@@ -35,7 +35,7 @@ import { authMiddleware } from "../controllers/authController";
  *       example:
  *         content: "that is a great recipe"
  *         author: "User123"
- *         recipeid: "123124143"
+ *         recipeId: "123124143"
  *         createdAt: "2023-07-15T19:20:30Z"
  */
 
