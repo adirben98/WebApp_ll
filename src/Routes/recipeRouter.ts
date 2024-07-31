@@ -10,6 +10,7 @@ import restApiController from "../controllers/restApi";
  *   name: Recipe
  *   description: The Recipe API
  */
+
 /**
  * @swagger
  * components:
@@ -18,7 +19,9 @@ import restApiController from "../controllers/restApi";
  *       type: object
  *       required:
  *         - name
+ *         - author
  *         - category
+ *         - description
  *         - ingredients
  *         - instructions
  *         - image
@@ -26,29 +29,36 @@ import restApiController from "../controllers/restApi";
  *         name:
  *           type: string
  *           description: The recipe name
+ *         author:
+ *           type: string
+ *           description: The recipe author
+ *         authorImg:
+ *           type: string
+ *           description: The author's image URL
  *         category:
  *           type: string
  *           description: The recipe category
+ *         description:
+ *           type: string
+ *           description: The recipe description
  *         ingredients:
  *           type: array
  *           items:
  *             type: string
  *           description: The recipe ingredients
  *         instructions:
- *           type: array
- *           items:
- *             type: string
- *           description: The recipe instructions
- *         image:
  *           type: string
- *           description: The recipe image
+ *           description: The recipe instructions
  *         createdAt:
  *           type: string
  *           format: date-time
  *           description: The recipe creation date
+ *         image:
+ *           type: string
+ *           description: The recipe image URL
  *         likes:
  *           type: number
- *           description: The recipe likes
+ *           description: The number of likes
  *         likedBy:
  *           type: array
  *           items:
@@ -57,19 +67,17 @@ import restApiController from "../controllers/restApi";
  *       example:
  *         name: "Spaghetti Carbonara"
  *         author: "John Doe"
+ *         authorImg: "https://example.com/author.jpg"
  *         category: "Italian"
+ *         description: "A classic Italian pasta dish"
  *         ingredients:
  *           - "spaghetti"
  *           - "eggs"
  *           - "pancetta"
  *           - "parmesan cheese"
  *           - "black pepper"
- *         instructions:
- *           - "Cook spaghetti according to package instructions."
- *           - "In a separate pan, cook pancetta until crispy."
- *           - "Whisk eggs and Parmesan together in a bowl."
- *           - "Combine spaghetti, pancetta, and egg mixture."
- *           - "Season with black pepper and serve."
+ *         instructions: "Cook spaghetti according to package instructions. In a separate pan, cook pancetta until crispy. Whisk eggs and Parmesan together in a bowl. Combine spaghetti, pancetta, and egg mixture. Season with black pepper and serve."
+ *         createdAt: "January 1st 2021, 10:00:00 am"
  *         image: "https://example.com/spaghetti-carbonara.jpg"
  *         likes: 5
  *         likedBy: ["user1", "user2"]
@@ -470,9 +478,12 @@ recipeRouter.post("/unlike/:id", authMiddleware, recipeController.likeDecrement.
  *               value:
  *                 _id: "123124143"
  *                 name: "Spaghetti Carbonara"
- *                 category: "dinner"
+ *                 author: "John Doe"
+ *                 authorImg: "https://example.com/author.jpg"
+ *                 category: "Italian"
+ *                 description: "A classic Italian pasta dish"
  *                 ingredients: ["spaghetti", "eggs", "pancetta", "parmesan cheese", "black pepper"]
- *                 instructions: ["Cook spaghetti according to package instructions.", "In a separate pan, cook pancetta until crispy.", "Whisk eggs and Parmesan together in a bowl.", "Combine spaghetti, pancetta, and egg mixture.", "Season with black pepper and serve."]
+ *                 instructions: "Cook spaghetti according to package instructions. In a separate pan, cook pancetta until crispy. Whisk eggs and Parmesan together in a bowl. Combine spaghetti, pancetta, and egg mixture. Season with black pepper and serve."
  *                 image: "https://example.com/spaghetti-carbonara.jpg"
  *     responses:
  *       200:

@@ -222,7 +222,7 @@ authRouter.post("/checkToken", authController.checkToken);
 
 /**
  * @swagger
- * /auth/updateUserImg:
+ * /auth/updateUserImage:
  *   put:
  *     summary: Updates a user's image
  *     tags: [Auth]
