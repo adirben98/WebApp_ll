@@ -1,6 +1,6 @@
 import express from 'express';
 const router = express.Router();
-import {authMiddleware}  from '../controllers/authController';
+import { authMiddleware } from '../controllers/authController';
 import { checkRoom, createRoom, getMessages, getMyRooms } from '../controllers/roomController';
 
 /**
@@ -48,6 +48,11 @@ import { checkRoom, createRoom, getMessages, getMyRooms } from '../controllers/r
  *           type: string
  *           format: date-time
  *           description: Timestamp when the message was sent
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
  */
 
 /**
@@ -70,6 +75,8 @@ import { checkRoom, createRoom, getMessages, getMyRooms } from '../controllers/r
  *         schema:
  *           type: string
  *         description: The room ID
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: Room status
@@ -102,6 +109,8 @@ router.get('/check/:roomId', authMiddleware, checkRoom);
  *                 type: array
  *                 items:
  *                   type: string
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       201:
  *         description: Room created
@@ -125,6 +134,8 @@ router.post('/create', authMiddleware, createRoom);
  *         schema:
  *           type: string
  *         description: The room ID
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: List of messages
@@ -143,6 +154,8 @@ router.get('/:roomId/messages', authMiddleware, getMessages);
  *   get:
  *     summary: Get rooms for the authenticated user
  *     tags: [Rooms]
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: List of rooms

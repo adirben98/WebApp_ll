@@ -2,8 +2,8 @@ import init from "./app";
 const port = process.env.PORT;
 import io from "./socket_server";
 import http from "http";
-import https from 'https'
-import fs from 'fs'
+import https from "https";
+import fs from "fs";
 init().then((app) => {
   if (process.env.NODE_ENV !== "production") {
     console.log("development");
@@ -17,7 +17,7 @@ init().then((app) => {
       cert: fs.readFileSync("../client-cert.pem"),
       ca: fs.readFileSync("../ca.crt"),
     };
-    const server=https.createServer(options2, app)
+    const server = https.createServer(options2, app);
     io(server);
     server.listen(process.env.HTTPS_PORT);
   }
