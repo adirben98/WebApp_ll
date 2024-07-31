@@ -44,14 +44,14 @@ let app: App;
 beforeAll(async () => {
   app = await init();
   console.log("Before all");
-  await User.deleteMany({ "email": user.email });
-  await Recipe.deleteMany({ "author": "Idan" });
+  await User.deleteMany({});
+  await Recipe.deleteMany({});
 
   MockOAuth2Client.prototype.verifyIdToken.mockImplementation(async () => {
     return {
       getPayload: () => ({
-        email: "shlomi@gmail.com",
-        name: "Idan",
+        email: "shlomi1@gmail.com",
+        name: "Idan1",
         picture: "https://example.com/picture.jpg"
       })
     };
@@ -66,6 +66,8 @@ describe("Auth Tests", () => {
   test("Register", async () => {
     const res = await request(app).post("/auth/register").send(user);
     expect(res.statusCode).toEqual(201);
+    user.accessToken = res.body.accessToken;
+    user.refreshToken = res.body.refreshToken;
   });
 
   test("Login", async () => {
@@ -73,8 +75,7 @@ describe("Auth Tests", () => {
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty("accessToken");
     expect(res.body).toHaveProperty("refreshToken");
-    user.accessToken = res.body.accessToken;
-    user.refreshToken = res.body.refreshToken;
+ 
   });
 
   test("Middleware", async () => {
@@ -171,7 +172,7 @@ describe("Auth Tests", () => {
 
   test("Update User Image", async () => {
     const newImage = "https://example.com/new-image.png";
-    const res = await request(app).put("/auth/updateUserImg")
+    const res = await request(app).put("/auth/updateUserImage")
       .set("Authorization", "Bearer " + user.accessToken)
       .send({ imgUrl: newImage });
     expect(res.statusCode).toEqual(200);

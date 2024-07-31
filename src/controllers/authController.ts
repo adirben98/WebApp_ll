@@ -24,14 +24,14 @@ const register = async (req: Request, res: Response) => {
     return res.status(400).send("Email and password are required");
   }
   try {
-    let user = await User.findOne({ email: email });
-    if (user) {
-      return res.status(409).send("User already exists");
-    }
-    user=await User.findOne({username:username})
-    if (user) {
-      return res.status(408).send("User already exists");
-    }
+    // let user = await User.findOne({ email: email });
+    // if (user) {
+    //   return res.status(409).send("User already exists");
+    // }
+    // user=await User.findOne({username:username})
+    // if (user) {
+    //   return res.status(408).send("User already exists");
+    // }
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
     const newUser = await User.create({

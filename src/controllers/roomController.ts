@@ -40,7 +40,7 @@ export const saveMessage = async (data: { roomId: string, username: string, mess
 export const getMyRooms = async (req: AuthRequest, res: Response) => {
   const id = req.user._id
   try{
-    const user = await User.findOne({_id:id})
+    const user = await User.findById({_id:id})
     const rooms = await Room.find({ $or: [{ user1: user.username }, { user2: user.username }] });
     let arr=[]
     for(let i=0;i<rooms.length;i++){

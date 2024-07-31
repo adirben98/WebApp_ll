@@ -40,8 +40,8 @@ const testRecipe:IRecipe={
 }
 const user1: TestUser = {
     
-    "email": "Idan@gmail.com",
-    "username":"Idan the chef",
+    "email": "Idan888@gmail.com",
+    "username":"Idan the chef@",
     "password": "1234"
   }
   const user2: TestUser = {
@@ -54,9 +54,9 @@ const user1: TestUser = {
 beforeAll(async () => {
     app = await init();
     console.log("Before all");
-    await User.deleteMany({ });
-    await Recipe.deleteMany({ })
-    await Comment.deleteMany({ })
+    await User.deleteMany({});
+    await Recipe.deleteMany({})
+    await Comment.deleteMany({})
     await request(app).post("/auth/register").send(user1);
     await request(app).post("/auth/register").send(user2);
     const res1 = await request(app).post("/auth/login").send(user1);
@@ -77,7 +77,7 @@ afterAll(async () => {
         const res = await request(app).post("/comment").set("Authorization", "Bearer " + user1.accessToken).send(testComment1);
         expect(res.statusCode).toEqual(201);
         expect(res.body.content).toEqual("that is a great recipe")
-        expect(res.body.author).toEqual("Idan the chef")
+        expect(res.body.author).toEqual("Idan the chef@")
         expect(res.body.recipeId).toEqual(testRecipe._id)
         testComment1._id=res.body._id
         testComment1.author=res.body.author
@@ -95,7 +95,7 @@ afterAll(async () => {
     test("Get Comments By Recipe Id", async () => {
         const res = await request(app).get("/comment/"+testRecipe._id).set("Authorization", "Bearer " + user2.accessToken).send();
         expect(res.statusCode).toEqual(200);
-        expect(res.body[1].author).toEqual("Idan the chef")
+        expect(res.body[1].author).toEqual("Idan the chef@")
         expect(res.body[1].content).toEqual("that is a great recipe")
         expect(res.body[1].recipeId).toEqual(testRecipe._id)
         expect(res.body[0].author).toEqual("Eliav the chef")

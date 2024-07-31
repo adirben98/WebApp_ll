@@ -5,10 +5,10 @@ import { App } from "supertest/types";
 import Recipe, { IRecipe } from "../models/recipeModel";
 import { TestUser } from "./auth.test";
 import User from "../models/userModel";
-import axios from 'axios';
+import axios from "axios";
 import moment from "moment";
 
-jest.mock('axios');
+jest.mock("axios");
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 let testRecipe: IRecipe = {
@@ -33,13 +33,13 @@ const user: TestUser = {
 };
 
 let app: App;
+
 beforeAll(async () => {
   app = await init();
   console.log("Before all");
   await User.deleteMany({});
   await Recipe.deleteMany({});
-  await request(app).post("/auth/register").send(user);
-  const res = await request(app).post("/auth/login").send(user);
+  const res = await request(app).post("/auth/register").send(user);
   user.accessToken = res.body.accessToken;
 });
 
@@ -68,7 +68,7 @@ describe("Recipe Tests", () => {
     expect(res.body.likes).toEqual(0);
     expect(res.body.likedBy).toEqual([]);
 
-    testRecipe=res.body
+    testRecipe = res.body;
   });
 
   test("Get Recipe By Id", async () => {
@@ -143,7 +143,7 @@ describe("Recipe Tests", () => {
     const likes = res.body.likes;
 
     const res2 = await request(app)
-      .post("/recipe/like/" + testRecipe._id + "")
+      .post("/recipe/like/" + testRecipe._id)
       .set("Authorization", "Bearer " + user.accessToken)
       .send();
     expect(res2.statusCode).toEqual(200);
@@ -164,7 +164,7 @@ describe("Recipe Tests", () => {
     const likes = res.body.likes;
 
     const res2 = await request(app)
-      .post("/recipe/unlike/" + testRecipe._id + "")
+      .post("/recipe/unlike/" + testRecipe._id)
       .set("Authorization", "Bearer " + user.accessToken)
       .send();
     expect(res2.statusCode).toEqual(200);
@@ -181,11 +181,20 @@ describe("Recipe Tests", () => {
     const categories = {
       data: {
         categories: [
-          { strCategory: 'Italian', strCategoryThumb: 'https://example.com/italian.jpg' },
-          { strCategory: 'American', strCategoryThumb: 'https://example.com/american.jpg' },
-          { strCategory: 'Mexican', strCategoryThumb: 'https://example.com/mexican.jpg' }
-        ]
-      }
+          {
+            strCategory: "Italian",
+            strCategoryThumb: "https://example.com/italian.jpg",
+          },
+          {
+            strCategory: "American",
+            strCategoryThumb: "https://example.com/american.jpg",
+          },
+          {
+            strCategory: "Mexican",
+            strCategoryThumb: "https://example.com/mexican.jpg",
+          },
+        ],
+      },
     };
     mockedAxios.get.mockResolvedValue(categories);
 
@@ -195,9 +204,9 @@ describe("Recipe Tests", () => {
       .send();
     expect(res.statusCode).toEqual(200);
     expect(res.body).toEqual([
-      { name: 'Italian', image: 'https://example.com/italian.jpg' },
-      { name: 'American', image: 'https://example.com/american.jpg' },
-      { name: 'Mexican', image: 'https://example.com/mexican.jpg' }
+      { name: "Italian", image: "https://example.com/italian.jpg" },
+      { name: "American", image: "https://example.com/american.jpg" },
+      { name: "Mexican", image: "https://example.com/mexican.jpg" },
     ]);
   });
 
@@ -210,7 +219,7 @@ describe("Recipe Tests", () => {
     expect(res.body).toEqual(false);
 
     await request(app)
-      .post("/recipe/like/" + testRecipe._id + "")
+      .post("/recipe/like/" + testRecipe._id)
       .set("Authorization", "Bearer " + user.accessToken)
       .send();
 
@@ -251,7 +260,8 @@ describe("Recipe Tests", () => {
             strCategory: "Italian",
             strArea: "Italian",
             strInstructions: "Instructions for Spaghetti Carbonara...",
-            strMealThumb: "https://www.themealdb.com/images/media/meals/llcbn01574260722.jpg",
+            strMealThumb:
+              "https://www.themealdb.com/images/media/meals/llcbn01574260722.jpg",
             strIngredient1: "Spaghetti",
             strIngredient2: "Egg Yolks",
             strIngredient3: "Pancetta",
@@ -261,14 +271,14 @@ describe("Recipe Tests", () => {
             strMeasure2: "4",
             strMeasure3: "100g",
             strMeasure4: "50g",
-            strMeasure5: "To Taste"
-          }
-        ]
-      }
+            strMeasure5: "To Taste",
+          },
+        ],
+      },
     };
-  
+
     mockedAxios.get.mockResolvedValue(categorySearchResponse);
-  
+
     const res = await request(app)
       .get("/recipe/categorySearch/Italian")
       .set("Authorization", "Bearer " + user.accessToken)
@@ -281,12 +291,15 @@ describe("Recipe Tests", () => {
       "Egg Yolks - 4",
       "Pancetta - 100g",
       "Parmesan Cheese - 50g",
-      "Black Pepper - To Taste"
+      "Black Pepper - To Taste",
     ]);
-    expect(res.body[0].instructions).toEqual("Instructions for Spaghetti Carbonara...");
-    expect(res.body[0].image).toEqual("https://www.themealdb.com/images/media/meals/llcbn01574260722.jpg");
+    expect(res.body[0].instructions).toEqual(
+      "Instructions for Spaghetti Carbonara..."
+    );
+    expect(res.body[0].image).toEqual(
+      "https://www.themealdb.com/images/media/meals/llcbn01574260722.jpg"
+    );
   });
-  
 
   test("Get Five Random Recipes", async () => {
     const randomRecipe = {
@@ -298,7 +311,8 @@ describe("Recipe Tests", () => {
             strCategory: "Italian",
             strArea: "Italian",
             strInstructions: "Instructions for Spaghetti Carbonara...",
-            strMealThumb: "https://www.themealdb.com/images/media/meals/llcbn01574260722.jpg",
+            strMealThumb:
+              "https://www.themealdb.com/images/media/meals/llcbn01574260722.jpg",
             strTags: "Pasta,Italian",
             strYoutube: "https://www.youtube.com/watch?v=3AAdKl1UYZs",
             strIngredient1: "Spaghetti",
@@ -310,10 +324,10 @@ describe("Recipe Tests", () => {
             strMeasure2: "4",
             strMeasure3: "100g",
             strMeasure4: "50g",
-            strMeasure5: "To Taste"
-          }
-        ]
-      }
+            strMeasure5: "To Taste",
+          },
+        ],
+      },
     };
     mockedAxios.get.mockResolvedValue(randomRecipe);
 
@@ -336,7 +350,8 @@ describe("Recipe Tests", () => {
             strCategory: "Italian",
             strArea: "Italian",
             strInstructions: "Instructions for Spaghetti Carbonara...",
-            strMealThumb: "https://www.themealdb.com/images/media/meals/llcbn01574260722.jpg",
+            strMealThumb:
+              "https://www.themealdb.com/images/media/meals/llcbn01574260722.jpg",
             strTags: "Pasta,Italian",
             strYoutube: "https://www.youtube.com/watch?v=3AAdKl1UYZs",
             strIngredient1: "Spaghetti",
@@ -348,10 +363,10 @@ describe("Recipe Tests", () => {
             strMeasure2: "4",
             strMeasure3: "100g",
             strMeasure4: "50g",
-            strMeasure5: "To Taste"
-          }
-        ]
-      }
+            strMeasure5: "To Taste",
+          },
+        ],
+      },
     };
     mockedAxios.get.mockResolvedValue(recipeByName);
 
@@ -367,9 +382,11 @@ describe("Recipe Tests", () => {
       "Egg Yolks - 4",
       "Pancetta - 100g",
       "Parmesan Cheese - 50g",
-      "Black Pepper - To Taste"
+      "Black Pepper - To Taste",
     ]);
-    expect(res.body.instructions).toEqual("Instructions for Spaghetti Carbonara...");
+    expect(res.body.instructions).toEqual(
+      "Instructions for Spaghetti Carbonara..."
+    );
   });
 
   test("Delete Recipe", async () => {
@@ -387,6 +404,6 @@ describe("Recipe Tests", () => {
       .get("/recipe/" + testRecipe._id)
       .set("Authorization", "Bearer " + user.accessToken)
       .send();
-    expect(res3.statusCode).toEqual(404); 
+    expect(res3.statusCode).toEqual(404);
   });
 });
