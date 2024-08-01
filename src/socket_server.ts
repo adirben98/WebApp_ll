@@ -6,7 +6,7 @@ import Message from './models/messageModel';
 export = (server: http.Server) => {
   const io = new Server(server, {
     cors: {
-      origin: "10.10.248.166",
+      origin: "*",
       methods: ["GET", "POST"]
     }
   });
